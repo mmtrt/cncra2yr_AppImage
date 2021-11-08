@@ -39,22 +39,22 @@ export WINEDEBUG="-all"
 
 cncra2yrs ; rm ./*AppImage*
 
-WINE_VER="$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/ | grep wine-stable | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)"
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_${WINE_VER}-x86_64.AppImage
-chmod +x *.AppImage ; mv wine-stable_${WINE_VER}-x86_64.AppImage wine-stable.AppImage
+WINE_VER="$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/ | grep wine-devel | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)"
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_${WINE_VER}-x86_64.AppImage
+chmod +x *.AppImage ; mv wine-devel_${WINE_VER}-x86_64.AppImage wine-devel.AppImage
 
 # Create winetricks & wine cache
 mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,dotnet45,ahk,xna40} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp dotnetfx45_full_x86_x64.exe /home/runner/.cache/winetricks/dotnet45 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
 cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk
 
 # Create WINEPREFIX
-./wine-stable.AppImage winetricks -q xna40 dotnet45 ; sleep 5
+./wine-devel.AppImage winetricks -q xna40 dotnet45 ; sleep 5
 
 # Create empty files
 mkdir -p Westwood/RA2 ; ( cd Westwood/RA2 || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
 
 # Install game
-( ./wine-stable.AppImage wine CnCNet5_YR_Installer.exe /silent ; sleep 5 )
+( ./wine-devel.AppImage wine CnCNet5_YR_Installer.exe /silent ; sleep 5 )
 
 # cp -Rp tmp/* TiberianSun_Online/ ; rm ./*.7z
 cp -Rp ./Westwood "$WINEPREFIX"/drive_c/
