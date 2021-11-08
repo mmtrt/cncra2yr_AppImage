@@ -51,16 +51,14 @@ cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.e
 ./wine-devel.AppImage winetricks -q xna40 dotnet45 ; sleep 5
 
 # Create empty files
-mkdir -p Westwood/RA2 ; ( cd Westwood/RA2 || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
+mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood/RA2" || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
 
 # Install game
 ( ./wine-devel.AppImage wine CnCNet5_YR_Installer.exe /silent ; sleep 5 )
 
-# cp -Rp tmp/* TiberianSun_Online/ ; rm ./*.7z
-cp -Rp ./Westwood "$WINEPREFIX"/drive_c/
-
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
+( cd "$WINEPREFIX/drive_c/Westwood/RA2" ; rm BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix ) || true
 
 cp -Rp $WINEPREFIX ra2yr-mp/ ; rm -rf $WINEPREFIX ; rm -rf ./ra2yr-mp/winedata ; rm ./*.AppImage
 
