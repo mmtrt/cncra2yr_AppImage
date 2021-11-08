@@ -1,0 +1,133 @@
+#!/bin/bash
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+progName="cncra2yr"
+progArch="-x86_64"
+progVer=
+progRealPath="$progHome/Westwood/RA2"
+progHome="$HOME/.$progName"
+progBin="CnCNetYRLauncher.exe"
+progIcoD="$HOME/.local/share/applications/$progName.desktop"
+
+# Symlink stuff
+mkdir -p "$progHome" || exit 1
+
+dkico() {
+if [[ ! -f $progIcoD ]]; then
+
+cp -r "$HERE"/usr/share/icons "$HOME"/.local/share
+mkdir -p "$HOME/.local/share/applications"
+DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
+
+{
+echo "[Desktop Entry]"
+echo "Type=Application"
+echo "Encoding=UTF-8"
+echo "Name=$progName"
+echo "Comment="
+echo "Icon=$progName"
+echo "TryExec=${OWD}/${progName}_${progArch}.AppImage"
+echo "Exec=${OWD}/${progName}_${progArch}.AppImage %F"
+echo "Categories=Game;"
+echo "Terminal=false"
+echo "StartupWMClass=CnCNetYRLauncher.exe,clientxna.exe,game.exe,gamemd-spawn.exe"
+echo "Keywords=game"
+} >> "$DesktopFilePath"
+fi
+}
+
+# check for wine appimage
+wine_file=$(find "$HOME"/Downloads "$HOME"/bin "$HOME"/.local/bin -type f \( -name '*.appimage' -o -name '*.AppImage' \) 2>/dev/null | grep -e "wine-stable" -e 'Wine-stable' | head -n 1)
+
+if [[ -f $wine_file ]]; then
+
+# Calling binary files from other AppImage having $ARGV0
+
+export winecmd=$wine_file
+
+function wine {
+  $winecmd wine "$@"
+}
+
+function wineserver {
+  $winecmd wineserver "$@"
+}
+
+function winetricks {
+  $winecmd winetricks -q "$@"
+}
+
+else
+echo "wine-stable appimage is missing can not run cncra2yr"
+echo ""
+echo "Download wine-stable*.appimage from https://github.com/mmtrt/WINE_AppImage/releases"
+echo ""
+echo "Then"
+echo ""
+echo "chmod +x wine-stable*.AppImage"
+echo ""
+echo "Also make sure you have single copy of wine-stable appimage present these locations"
+echo ""
+echo "$HOME/Downloads ; $HOME/bin ; $HOME/.local/bin"
+exit 1
+fi
+
+# Create custom $WINEPREFIX and add $WINEDLLOVERRIDES
+export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mshtml=" WINEDEBUG="fixme-all" WINEARCH="win32"
+
+if [[ ! -d $WINEPREFIX ]]; then
+
+if [ ! -f "$HOME"/.cache/wine/wine-mono-5.1.1-x86.msi ]; then
+mkdir -p "$HOME"/.cache/wine
+ln -s "$HERE"/winedata/wine-mono-5.1.1-x86.msi "$HOME"/.cache/wine/
+elif [ ! -f "$HOME"/.cache/winetricks/dotnet40/dotNetFx40_Full_x86_x64.exe ]; then
+mkdir -p "$HOME"/.cache/winetricks/dotnet40
+ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
+elif [ ! -f "$HOME"/.cache/winetricks/dotnet45/dotnetfx45_full_x86_x64.exe ]; then
+mkdir -p "$HOME"/.cache/winetricks/dotnet45
+ln -s "$HERE"/winedata/dotnetfx45_full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet45/
+elif [ ! -f "$HOME"/.cache/winetricks/xna40/xnafx40_redist.msi ]; then
+mkdir -p "$HOME"/.cache/winetricks/xna40
+ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
+elif [ ! -f "$HOME"/.cache/winetricks/ahk/AutoHotkey104805_Install.exe ]; then
+mkdir -p "$HOME"/.cache/winetricks/ahk
+ln -s "$HERE"/winedata/AutoHotkey104805_Install.exe "$HOME"/.cache/winetricks/ahk/
+fi
+
+winetricks xna40 dotnet45
+
+ln -s "$HERE"/winedata/CnCNet5_YR_Installer.exe "$progHome"
+
+# silent flag for this /silent
+wine "$progHome"/CnCNet5_YR_Installer.exe
+
+rm "$progHome"/CnCNet5_YR_Installer.exe
+fi
+
+# Passing args to wine apps
+for i; do # for i = for i in "$@"
+    # Add path in Wine form (e.g. "z:/home/user/Desktop/lol.xyz")
+    if [[ -f /${i#?:} ]]; then 
+        args+=("z:${i#?:}")   # When opened through .desktop or Wine path (e.g. z:/*)
+    elif [[ "${i:0:1}" = "-" ]]; then
+        args+=("${i/#-//}")
+    fi
+done
+
+# Launch wineboot/winecfg/winetricks if requested.
+# If the executable exists then launch it.
+case "$1" in
+  "install")
+    dkico
+    ;;
+  "winetricks")
+    winetricks "$2" "$3"
+    ;;
+  "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
+    wine "$1"
+    ;;
+  *)
+    wine "$WINEPREFIX"/drive_c/Westwood/RA2/"$progBin" "${args[@]}" 2>/dev/null
+    ;;
+esac
