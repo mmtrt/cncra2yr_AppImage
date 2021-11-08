@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=cncra2yr
+Comment=
+Exec=AppRun
+Icon=cncra2yr
+Categories=Game;
+Terminal=false
+StartupWMClass=CnCNetYRLauncher.exe,clientxna.exe,game.exe,gamemd-spawn.exe
+Keywords=game
