@@ -7,7 +7,7 @@ progArch="-x86_64"
 progVer=
 progRealPath="$progHome/Westwood/RA2"
 progHome="$HOME/.$progName"
-progBin="CnCNetYRLauncher.exe"
+progBin="clientxna.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 
 # Symlink stuff
@@ -78,22 +78,16 @@ export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mshtml=" WINEDEBUG="fixm
 
 if [[ ! -d $WINEPREFIX ]]; then
 
-if [ ! -f "$HOME"/.cache/wine/wine-mono-6.4.0-x86.msi ]; then
-mkdir -p "$HOME"/.cache/wine
+mkdir -p "$HOME"/.cache/{wine,winetricks}
+mkdir -p "$HOME"/.cache/winetricks/{dotnet40,dotnet45,xna40}
+mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
+
+find "$HOME/.cache/wine/" "$HOME/.cache/winetricks/" -type l -delete &>/dev/null
+
 ln -s "$HERE"/winedata/wine-mono-6.4.0-x86.msi "$HOME"/.cache/wine/
-elif [ ! -f "$HOME"/.cache/winetricks/dotnet40/dotNetFx40_Full_x86_x64.exe ]; then
-mkdir -p "$HOME"/.cache/winetricks/dotnet40
 ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
-elif [ ! -f "$HOME"/.cache/winetricks/dotnet45/dotnetfx45_full_x86_x64.exe ]; then
-mkdir -p "$HOME"/.cache/winetricks/dotnet45
 ln -s "$HERE"/winedata/dotnetfx45_full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet45/
-elif [ ! -f "$HOME"/.cache/winetricks/xna40/xnafx40_redist.msi ]; then
-mkdir -p "$HOME"/.cache/winetricks/xna40
 ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
-elif [ ! -f "$HOME"/.cache/winetricks/ahk/AutoHotkey104805_Install.exe ]; then
-mkdir -p "$HOME"/.cache/winetricks/ahk
-ln -s "$HERE"/winedata/AutoHotkey104805_Install.exe "$HOME"/.cache/winetricks/ahk/
-fi
 
 winetricks -q xna40 dotnet45
 
@@ -128,6 +122,6 @@ case "$1" in
     wine "$1"
     ;;
   *)
-    wine "$WINEPREFIX"/drive_c/Westwood/RA2/"$progBin" "${args[@]}" 2>/dev/null
+    wine "$WINEPREFIX"/drive_c/Westwood/RA2/Resources/"$progBin" "${args[@]}" 2>/dev/null
     ;;
 esac
