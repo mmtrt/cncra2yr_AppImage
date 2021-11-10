@@ -112,12 +112,9 @@ fi
 
 winetricks -q xna40 dotnet45
 
-ln -s "$HERE"/winedata/CnCNet5_YR_Installer.exe "$progHome"
-
 # silent flag for this /silent
-wine "$progHome"/CnCNet5_YR_Installer.exe
+wine "$HERE"/winedata/CnCNet5_YR_Installer.exe
 
-rm "$progHome"/CnCNet5_YR_Installer.exe
 fi
 
 # Passing args to wine apps
