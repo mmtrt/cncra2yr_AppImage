@@ -76,6 +76,15 @@ fi
 # Create custom $WINEPREFIX and add $WINEDLLOVERRIDES
 export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mshtml=" WINEDEBUG="fixme-all" WINEARCH="win32"
 
+msg="Note: This AppImage does not include the actual game so you have to buy or use your bought copy game files in order play.\n
+Copy the following RA2|YR game files to $WINEPREFIX/drive_c/Westwood/RA2/ \n
+ > BINKW32.dll
+ > BLOWFISH.dll
+ > ra2.mix
+ > ra2md.mix
+ > language.mix
+ > langmd.mix"
+
 if [[ ! -d $WINEPREFIX ]]; then
 
 mkdir -p "$HOME"/.cache/{wine,winetricks}
@@ -88,6 +97,18 @@ ln -s "$HERE"/winedata/wine-mono-6.4.0-x86.msi "$HOME"/.cache/wine/
 ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
 ln -s "$HERE"/winedata/dotnetfx45_full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet45/
 ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
+
+if [ ! -f "$WINEPREFIX/drive_c/Westwood/RA2/ra2.mix" ]; then
+  if [ -x /usr/bin/zenity ] ; then
+    LD_LIBRARY_PATH="" zenity --error --text "${msg}" 2>/dev/null
+  elif [ -x /usr/bin/kdialog ] ; then
+    LD_LIBRARY_PATH="" kdialog --msgbox "${msg}" 2>/dev/null
+  elif [ -x /usr/bin/Xdialog ] ; then
+    LD_LIBRARY_PATH="" Xdialog --msgbox "${msg}" 2>/dev/null
+  else
+    echo "${msg}"
+  fi
+fi
 
 winetricks -q xna40 dotnet45
 
