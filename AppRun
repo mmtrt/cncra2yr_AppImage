@@ -109,6 +109,7 @@ if [ ! -f "$WINEPREFIX/drive_c/Westwood/RA2/ra2.mix" ]; then
     echo "${msg}"
     exit 0
   fi
+  exit 1
 fi
 
 winetricks -q xna40 dotnet45
