@@ -61,7 +61,7 @@ mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood
 
 cp -Rp $WINEPREFIX ra2yr-mp/ ; rm -rf $WINEPREFIX ; rm -rf ./ra2yr-mp/winedata ; rm ./*.AppImage
 
-# ( cd ra2yr-mp || exit ; wget -qO- 'https://gist.github.com/mmtrt/49df9fc50ae567a3d5d89791bdb65d45/raw/74fc5c9d2ad9e00b27db408ca0c68be612e31dc6/cncra2yrswp.patch' | patch -p1 )
+( cd ra2yr-mp || exit ; wget -qO- 'https://gist.github.com/mmtrt/b9c4b31672a36ece26d07bea0e9b7a17/raw/e0d4f329e4e380073e17c6a0c584068030390364/cncra2yrswp.patch' | patch -p1 )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./ra2yr-mp -n -u "gh-releases-zsync|mmtrt|cncra2yr_AppImage|stable-wp|cncra2yr*.AppImage.zsync" cncra2yr_WP-${ARCH}.AppImage &>/dev/null
 
