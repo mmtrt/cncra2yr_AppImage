@@ -22,7 +22,6 @@ wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
 wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
 wget -q "https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe"
 wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
-wget -q "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
 
 cp -Rp ./*.exe ra2yr-mp/winedata ; cp -Rp ./*.msi ra2yr-mp/winedata
 
@@ -44,11 +43,11 @@ wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-deve
 chmod +x *.AppImage ; mv wine-devel_${WINE_VER}-x86_64.AppImage wine-devel.AppImage
 
 # Create winetricks & wine cache
-mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,dotnet45,ahk,xna40,vcrun2012} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp dotnetfx45_full_x86_x64.exe /home/runner/.cache/winetricks/dotnet45 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
-cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; cp vcredist_x86.exe /home/runner/.cache/winetricks/vcrun2012
+mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,dotnet45,ahk,xna40} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp dotnetfx45_full_x86_x64.exe /home/runner/.cache/winetricks/dotnet45 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
+cp -Rp ./wine*.msi /home/runner/.cache/wine/
 
 # Create WINEPREFIX
-./wine-devel.AppImage winetricks -q xna40 dotnet45 vcrun2012 ; sleep 5
+./wine-devel.AppImage winetricks -q xna40 dotnet45 ; sleep 5
 
 # Create empty files
 mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood/RA2" || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
