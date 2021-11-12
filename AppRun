@@ -103,7 +103,7 @@ fi
 if [[ ! -f "$WINEPREFIX/drive_c/windows/explorer.exe" ]]; then
 
 mkdir -p "$HOME"/.cache/{wine,winetricks}
-mkdir -p "$HOME"/.cache/winetricks/{dotnet40,dotnet45,xna40}
+mkdir -p "$HOME"/.cache/winetricks/{dotnet40,dotnet45,xna40,vcrun2012}
 
 find "$HOME/.cache/wine/" "$HOME/.cache/winetricks/" -type l -delete &>/dev/null
 
@@ -111,8 +111,9 @@ ln -s "$HERE"/winedata/wine-mono-6.4.0-x86.msi "$HOME"/.cache/wine/
 ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
 ln -s "$HERE"/winedata/dotnetfx45_full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet45/
 ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
+ln -s "$HERE"/winedata/vcredist_x86.exe "$HOME"/.cache/winetricks/vcrun2012/
 
-winetricks -q xna40 dotnet45
+winetricks -q xna40 dotnet45 vcrun2012
 
 # silent flag for this /silent
 wine "$HERE"/winedata/CnCNet5_YR_Installer.exe
