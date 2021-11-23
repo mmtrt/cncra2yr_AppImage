@@ -38,7 +38,7 @@ export WINEDEBUG="-all"
 
 cncra2yrs ; rm ./*AppImage*
 
-WINE_VER="$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/ | grep wine-devel | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)"
+WINE_VER="$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/tag/continuous-devel | grep x86_64 | cut -d'"' -f2 | sed 's|_| |g;s|-| |g' |awk '{print $5}'| head -1)"
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_${WINE_VER}-x86_64.AppImage
 chmod +x *.AppImage ; mv wine-devel_${WINE_VER}-x86_64.AppImage wine-devel.AppImage
 
