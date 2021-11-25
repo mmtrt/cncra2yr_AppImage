@@ -17,7 +17,7 @@ chmod +x ./appimagetool-x86_64.AppImage
 mkdir -p ra2yr-mp/usr ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp AppRun ra2yr-mp ;
 cp -r icons ra2yr-mp/usr/share ; cp cncra2yr.png ra2yr-mp
 
-wget -q "https://dl.winehq.org/wine/wine-mono/6.4.0/wine-mono-6.4.0-x86.msi"
+wget -q "https://dl.winehq.org/wine/wine-mono/7.0.0/wine-mono-7.0.0-x86.msi"
 wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
 wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
 wget -q "https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe"
