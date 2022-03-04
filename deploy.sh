@@ -17,7 +17,10 @@ chmod +x ./appimagetool-x86_64.AppImage
 mkdir -p ra2yr-mp/usr ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp AppRun ra2yr-mp ;
 cp -r icons ra2yr-mp/usr/share ; cp cncra2yr.png ra2yr-mp
 
-wget -q "https://dl.winehq.org/wine/wine-mono/7.0.0/wine-mono-7.0.0-x86.msi"
+WINE_VER=$(wget -qO- "https://github.com/mmtrt/WINE_AppImage/releases/tag/continuous-devel" | grep x86_64 | cut -d'"' -f2 | sed 's|_| |g;s|-| |g' |awk '{print $5}'| head -1)
+MONO_VER=$(wget 2>/dev/null "https://source.winehq.org/source/dlls/appwiz.cpl/addons.c?%21v=wine-${WINE_VER}" -qSO- | grep -Po 'MONO_VERSION</a>.*[0-9]"' addon | cut -d'"' -f4)
+
+wget -q "https://dl.winehq.org/wine/wine-mono/${MONO_VER}/wine-mono-${MONO_VER}-x86.msi"
 wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
 wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
 wget -q "https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe"
