@@ -18,7 +18,7 @@ mkdir -p ra2yr-mp/usr ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp AppR
 cp -r icons ra2yr-mp/usr/share ; cp cncra2yr.png ra2yr-mp
 
 WINE_VER=$(wget -qO- "https://github.com/mmtrt/WINE_AppImage/releases/tag/continuous-devel" | grep x86_64 | cut -d'"' -f2 | sed 's|_| |g;s|-| |g' |awk '{print $5}'| head -1)
-MONO_VER=$(wget 2>/dev/null "https://source.winehq.org/source/dlls/appwiz.cpl/addons.c?%21v=wine-${WINE_VER}" -qSO- | grep -Po 'MONO_VERSION</a>.*[0-9]"' addon | cut -d'"' -f4)
+MONO_VER=$(wget -qO- "https://source.winehq.org/source/dlls/appwiz.cpl/addons.c?%21v=wine-${WINE_VER}" | grep -Po 'MONO_VERSION</a>.*[0-9]"' addon | cut -d'"' -f4)
 
 wget -q "https://dl.winehq.org/wine/wine-mono/${MONO_VER}/wine-mono-${MONO_VER}-x86.msi"
 wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
