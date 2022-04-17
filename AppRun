@@ -107,7 +107,7 @@ mkdir -p "$HOME"/.cache/winetricks/{dotnet40,dotnet45,xna40}
 
 find "$HOME/.cache/wine/" "$HOME/.cache/winetricks/" -type l -delete &>/dev/null
 
-ln -s "$HERE"/winedata/wine-mono-6.4.0-x86.msi "$HOME"/.cache/wine/
+ln -s "$HERE"/winedata/wine-mono-*-x86.msi "$HOME"/.cache/wine/
 ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
 ln -s "$HERE"/winedata/dotnetfx45_full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet45/
 ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
