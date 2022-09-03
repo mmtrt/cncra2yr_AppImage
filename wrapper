@@ -1,6 +1,6 @@
 # APP env
 progName="cncra2yr"
-progArch="-x86_64"
+progArch="-i686"
 progVer=
 progHome="$HOME/.$progName"
 progBin="clientxna.exe"
