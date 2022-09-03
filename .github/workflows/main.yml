@@ -9,10 +9,10 @@ on:
     - cron: "0 0 */15 * *"
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ main ]
+    branches: [ test ]
     paths-ignore: [ '**/README.md' ]
   pull_request:
-    branches: [ main ]
+    branches: [ test ]
     paths-ignore: [ '**/README.md' ]
 
   # Allows you to run this workflow manually from the Actions tab
