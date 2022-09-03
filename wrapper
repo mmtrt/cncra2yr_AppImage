@@ -1,14 +1,27 @@
-#!/bin/bash
-
-HERE="$(dirname "$(readlink -f "${0}")")"
-
+# APP env
 progName="cncra2yr"
 progArch="-x86_64"
 progVer=
-progRealPath="$progHome/Westwood/RA2"
 progHome="$HOME/.$progName"
 progBin="clientxna.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
+
+if [ -d "$APPDIR/winedata/.wine" ]; then
+progRealPath="$APPDIR/.wine/drive_c/Westwood/RA2"
+# env used by unionfs-fuse
+# WINEPREFIX in the AppDir
+RO_WINEPREFIX="$APPDIR/winedata/.wine"
+MNT_WINEPREFIX="$progHome/.wine"
+RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
+else
+progRealPath="$progHome/Westwood/RA2"
+# WINE env
+export WINEARCH=${WINEARCH:-"win32"}
+export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mshtml="}
+export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
+fi
+export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
 
 # Symlink stuff
 mkdir -p "$progHome" || exit 1
@@ -16,7 +29,7 @@ mkdir -p "$progHome" || exit 1
 dkico() {
 if [[ ! -f $progIcoD ]]; then
 
-cp -r "$HERE"/usr/share/icons "$HOME"/.local/share
+cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
 mkdir -p "$HOME/.local/share/applications"
 DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
 
@@ -46,6 +59,10 @@ if [[ -f $wine_file ]]; then
 
 export winecmd=$wine_file
 
+function unionfs-fuse {
+  $winecmd unionfs-fuse "$@"
+}
+
 function wine {
   $winecmd wine "$@"
 }
@@ -73,11 +90,8 @@ echo "$HOME/Downloads ; $HOME/bin ; $HOME/.local/bin"
 exit 1
 fi
 
-# Create custom $WINEPREFIX and add $WINEDLLOVERRIDES
-export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mshtml=" WINEDEBUG="fixme-all" WINEARCH="win32"
-
 msg="Note: This AppImage does not include the actual game so you have to buy or use your bought copy game files in order play.\n
-Copy the following RA2|YR game files to $WINEPREFIX/drive_c/Westwood/RA2/ \n
+Copy the following RA2|YR game files to $progHome \n
  > BINKW32.dll
  > BLOWFISH.dll
  > ra2.mix
@@ -85,9 +99,10 @@ Copy the following RA2|YR game files to $WINEPREFIX/drive_c/Westwood/RA2/ \n
  > language.mix
  > langmd.mix"
 
-if [ ! -f "$WINEPREFIX/drive_c/Westwood/RA2/ra2.mix" ]; then
- mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
-  if [ -x /usr/bin/zenity ] ; then
+if [[ ! -f $progHome/ra2.mix ]]; then
+  if [ -d "$APPDIR/winedata/.wine" ]; then
+    mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
+  elif [ -x /usr/bin/zenity ] ; then
     LD_LIBRARY_PATH="" zenity --error --text "${msg}" 2>/dev/null || exit 0
   elif [ -x /usr/bin/kdialog ] ; then
     LD_LIBRARY_PATH="" kdialog --msgbox "${msg}" 2>/dev/null || exit 0
@@ -100,6 +115,23 @@ if [ ! -f "$WINEPREFIX/drive_c/Westwood/RA2/ra2.mix" ]; then
   exit 1
 fi
 
+if [ -d "$APPDIR/winedata/.wine" ]; then
+if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
+
+cp -Rvp $progRealPath/* $progHome/ &>/dev/null
+
+fi
+
+# Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
+if [ -d "$APPDIR/.wine" ] && [ -z "$WINEPREFIX" ] ; then
+  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY"
+  if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
+    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+    trap atexit EXIT
+  fi
+  export WINEPREFIX="$MNT_WINEPREFIX" WINEDLLOVERRIDES="mshtml=" WINEDEBUG="fixme-all" WINEARCH="win32"
+fi
+else
 if [[ ! -f "$WINEPREFIX/drive_c/windows/explorer.exe" ]]; then
 
 mkdir -p "$HOME"/.cache/{wine,winetricks}
@@ -118,6 +150,15 @@ winetricks -q xna40 dotnet45
 wine "$HERE"/winedata/CnCNet5_YR_Installer.exe
 
 fi
+fi
+
+atexit ()
+{
+  while pgrep -f "clientxna" ; do sleep 1 ; done
+  pkill -f "unionfs-fuse"
+  sleep 1
+  rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
+}
 
 # Passing args to wine apps
 for i; do # for i = for i in "$@"
@@ -139,9 +180,9 @@ case "$1" in
     winetricks "$2" "$3"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
-    wine "$1"
+    "$WINELOADER" "$1"
     ;;
   *)
-    wine "$WINEPREFIX"/drive_c/Westwood/RA2/Resources/"$progBin" "${args[@]}" 2>/dev/null
+    "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}" 2>/dev/null
     ;;
 esac
