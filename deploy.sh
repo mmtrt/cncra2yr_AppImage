@@ -81,7 +81,7 @@ rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp
 
 mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
 
-sed -i -e 's|progVer=|progVer='"${YR_VER}_WP"'|g' ra2yr-mp/wrapper
+sed -i -e 's|progVer=|progVer='"${YR_VER}_WP"'|g' AppDir/wrapper
 
 sed -i 's/stable|/stable-wp|/' cncra2yr.yml
 
