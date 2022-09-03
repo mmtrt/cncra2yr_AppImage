@@ -50,46 +50,6 @@ echo "Keywords=game"
 fi
 }
 
-# check for wine appimage
-wine_file=$(find "$HOME"/Downloads "$HOME"/bin "$HOME"/.local/bin -type f \( -name '*.appimage' -o -name '*.AppImage' \) 2>/dev/null | grep -e "wine-devel" -e 'Wine-devel' | head -n 1)
-
-if [[ -f $wine_file ]]; then
-
-# Calling binary files from other AppImage having $ARGV0
-
-export winecmd=$wine_file
-
-function unionfs-fuse {
-  $winecmd unionfs-fuse "$@"
-}
-
-function wine {
-  $winecmd wine "$@"
-}
-
-function wineserver {
-  $winecmd wineserver "$@"
-}
-
-function winetricks {
-  $winecmd winetricks -q "$@"
-}
-
-else
-echo "wine-devel appimage is missing can not run cncra2yr"
-echo ""
-echo "Download wine-devel*.appimage from https://github.com/mmtrt/WINE_AppImage/releases"
-echo ""
-echo "Then"
-echo ""
-echo "chmod +x wine-devel*.AppImage"
-echo ""
-echo "Also make sure you have single copy of wine-devel appimage present these locations"
-echo ""
-echo "$HOME/Downloads ; $HOME/bin ; $HOME/.local/bin"
-exit 1
-fi
-
 msg="Note: This AppImage does not include the actual game so you have to buy or use your bought copy game files in order play.\n
 Copy the following RA2|YR game files to $progHome \n
  > BINKW32.dll
