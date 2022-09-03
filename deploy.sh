@@ -11,10 +11,8 @@ wget -q https://github.com"${VER}" -O builder ; chmod +x builder
 mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
 
 YR_VER=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
-WINE_VER=$(wget -qO- "https://github.com/mmtrt/WINE_AppImage/releases/tag/continuous-devel" | grep x86_64 | cut -d'"' -f2 | sed 's|_| |g;s|-| |g' |awk '{print $5}'| head -1)
-MONO_VER=$(wget -qO- "https://source.winehq.org/source/dlls/appwiz.cpl/addons.c?%21v=wine-${WINE_VER}" | grep -Po 'MONO_VERSION</a>.*[0-9]"' | cut -d'"' -f4)
 
-wget -q "https://dl.winehq.org/wine/wine-mono/${MONO_VER}/wine-mono-${MONO_VER}-x86.msi"
+wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
 wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
 wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
 wget -q "https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe"
@@ -45,10 +43,8 @@ wget -q https://github.com"${VER}" -O builder ; chmod +x builder
 mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
 
 YR_VER=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
-WINE_VER=$(wget -qO- "https://github.com/mmtrt/WINE_AppImage/releases/tag/continuous-devel" | grep x86_64 | cut -d'"' -f2 | sed 's|_| |g;s|-| |g' |awk '{print $5}'| head -1)
-MONO_VER=$(wget -qO- "https://source.winehq.org/source/dlls/appwiz.cpl/addons.c?%21v=wine-${WINE_VER}" | grep -Po 'MONO_VERSION</a>.*[0-9]"' | cut -d'"' -f4)
 
-wget -q "https://dl.winehq.org/wine/wine-mono/${MONO_VER}/wine-mono-${MONO_VER}-x86.msi"
+wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
 wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
 wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
 wget -q "https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe"
