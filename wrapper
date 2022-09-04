@@ -61,8 +61,7 @@ Copy the following RA2|YR game files to $progHome \n
  > langmd.mix"
 
 if [[ ! -f $progHome/ra2.mix ]]; then
-  if [ -d "$APPDIR/winedata/.wine" ]; then
-  elif [ -x /usr/bin/zenity ] ; then
+  if [ -x /usr/bin/zenity ] ; then
     LD_LIBRARY_PATH="" zenity --error --text "${msg}" 2>/dev/null || exit 0
   elif [ -x /usr/bin/kdialog ] ; then
     LD_LIBRARY_PATH="" kdialog --msgbox "${msg}" 2>/dev/null || exit 0
