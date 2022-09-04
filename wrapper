@@ -7,7 +7,7 @@ progBin="clientxna.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-progRealPath="$APPDIR/.wine/drive_c/Westwood/RA2"
+progRealPath="$APPDIR/winedata/.wine/drive_c/Westwood/RA2"
 # env used by unionfs-fuse
 # WINEPREFIX in the AppDir
 RO_WINEPREFIX="$APPDIR/winedata/.wine"
@@ -16,12 +16,12 @@ RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
 else
 progRealPath="$progHome/Westwood/RA2"
 # WINE env
-export WINEARCH=${WINEARCH:-"win32"}
 export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
-export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mshtml="}
-export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
 fi
+export WINEARCH=${WINEARCH:-"win32"}
+export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mshtml="}
+export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
 
 # Symlink stuff
@@ -60,7 +60,7 @@ Copy the following RA2|YR game files to $progHome \n
  > language.mix
  > langmd.mix"
 
-if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $WINEPREFIX/drive_c/Westwood/RA2/ra2.mix ]]; then
+if [[ ! -f $progHome/ra2.mix ]] && [[ ! -f $WINEPREFIX/drive_c/Westwood/RA2/ra2.mix ]]; then
   mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" 2>/dev/null
   if [ -x /usr/bin/zenity ] ; then
     LD_LIBRARY_PATH="" zenity --error --text "${msg}" 2>/dev/null || exit 0
@@ -83,16 +83,14 @@ cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 fi
 
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
-if [ -d "$APPDIR/.wine" ] && [ -z "$WINEPREFIX" ] ; then
+if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
   mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY"
   if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
     unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
     trap atexit EXIT
   fi
-  export WINEPREFIX="$MNT_WINEPREFIX" WINEDLLOVERRIDES="mshtml=" WINEDEBUG="fixme-all" WINEARCH="win32"
-fi
-else
-if [[ ! -f "$WINEPREFIX/drive_c/windows/explorer.exe" ]]; then
+  export WINEPREFIX="$MNT_WINEPREFIX"
+elif [[ ! -d "$APPDIR/winedata/.wine" ]]; then
 
 mkdir -p "$HOME"/.cache/{wine,winetricks}
 mkdir -p "$HOME"/.cache/winetricks/{dotnet40,xna40}
