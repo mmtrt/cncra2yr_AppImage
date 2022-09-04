@@ -57,7 +57,7 @@ chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-i686.AppImage wine-stable.AppIma
 mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,dotnet45,ahk,xna40} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp dotnetfx45_full_x86_x64.exe /home/runner/.cache/winetricks/dotnet45 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
 cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; rm wrapper
 
-# ls -al
+ls -al
 
 # Create WINEPREFIX
 ./wine-stable.AppImage winetricks -q xna40 dotnet45 ; sleep 5
@@ -66,7 +66,7 @@ cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; rm wrapper
 mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood/RA2" || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
 
 # Install game
-( ./wine-stable.AppImage wine CnCNet5_YR_Installer.exe /silent ; sleep 5 )
+./wine-stable.AppImage wine CnCNet5_YR_Installer.exe /silent ; sleep 5
 
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
