@@ -55,7 +55,7 @@ chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-i686.AppImage wine-stable.AppIma
 
 # Create winetricks & wine cache
 mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,dotnet45,ahk,xna40} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp dotnetfx45_full_x86_x64.exe /home/runner/.cache/winetricks/dotnet45 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
-cp -Rp ./wine*.msi /home/runner/.cache/wine/
+cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; rm wrapper
 
 # ls -al
 
