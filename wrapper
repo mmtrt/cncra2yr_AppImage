@@ -13,7 +13,6 @@ progRealPath="$APPDIR/.wine/drive_c/Westwood/RA2"
 RO_WINEPREFIX="$APPDIR/winedata/.wine"
 MNT_WINEPREFIX="$progHome/.wine"
 RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
-mkdir -p "$MNT_WINEPREFIX/drive_c/Westwood/RA2"
 else
 progRealPath="$progHome/Westwood/RA2"
 # WINE env
@@ -78,7 +77,7 @@ fi
 if [ -d "$APPDIR/winedata/.wine" ]; then
 if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
 
-cp -Rvp $progRealPath/* $progHome/ &>/dev/null
+cp -Rvp "$progRealPath/"* $progHome/ &>/dev/null
 
 fi
 
