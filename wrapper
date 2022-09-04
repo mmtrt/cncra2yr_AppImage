@@ -60,7 +60,8 @@ Copy the following RA2|YR game files to $progHome \n
  > language.mix
  > langmd.mix"
 
-if [[ ! -f $progHome/ra2.mix ]]; then
+if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $WINEPREFIX/drive_c/Westwood/RA2/ra2.mix ]]; then
+  mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" 2>/dev/null
   if [ -x /usr/bin/zenity ] ; then
     LD_LIBRARY_PATH="" zenity --error --text "${msg}" 2>/dev/null || exit 0
   elif [ -x /usr/bin/kdialog ] ; then
@@ -77,7 +78,7 @@ fi
 if [ -d "$APPDIR/winedata/.wine" ]; then
 if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
 
-cp -Rvp "$progRealPath/"* $progHome/ &>/dev/null
+cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 
 fi
 
@@ -141,6 +142,10 @@ case "$1" in
     "$WINELOADER" "$1"
     ;;
   *)
-    "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}" 2>/dev/null
+    if [ -d "$APPDIR/winedata/.wine" ]; then
+     "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}" 2>/dev/null
+    else
+     "$WINELOADER" "$WINEPREFIX"/drive_c/Westwood/RA2/Resources/"$progBin" "${args[@]}" 2>/dev/null
+    fi
     ;;
 esac
