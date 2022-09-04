@@ -67,6 +67,7 @@ mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood
 ./wine-stable.AppImage CnCNet5_YR_Installer.exe /silent ; sleep 5
 
 ls -al $WINEPREFIX/drive_c/Westwood/RA2
+ls -al /tmp
 
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
