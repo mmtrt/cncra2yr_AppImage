@@ -10,7 +10,7 @@ wget -q https://github.com"${VER}" -O builder ; chmod +x builder
 
 mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
 
-YR_VER=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
 wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
 wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
@@ -18,7 +18,7 @@ wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D
 wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
 
 cp -Rp ./*.exe ra2yr-mp/winedata ; cp -Rp ./*.msi ra2yr-mp/winedata
-sed -i -e 's|progVer=|progVer='"$YR_VER"'|g' ra2yr-mp/wrapper
+sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
 
 mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
 
@@ -41,7 +41,7 @@ wget -q https://github.com"${VER}" -O builder ; chmod +x builder
 
 mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
 
-YR_VER=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
 wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
 wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
@@ -76,7 +76,7 @@ rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp
 
 mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
 
-sed -i -e 's|progVer=|progVer='"${YR_VER}_WP"'|g' AppDir/wrapper
+sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 
 sed -i 's/stable|/stable-wp|/' cncra2yr.yml
 
