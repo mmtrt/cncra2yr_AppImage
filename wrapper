@@ -139,11 +139,14 @@ case "$1" in
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
     ;;
+  "glxinfo"|"glxheads"|"vulkaninfo"|"vkcube")
+    "$@"
+    ;;
   *)
     if [ -d "$APPDIR/winedata/.wine" ]; then
-     "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}" 2>/dev/null
+     "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}"
     else
-     "$WINELOADER" "$WINEPREFIX"/drive_c/Westwood/RA2/Resources/"$progBin" "${args[@]}" 2>/dev/null
+     "$WINELOADER" "$WINEPREFIX"/drive_c/Westwood/RA2/Resources/"$progBin" "${args[@]}"
     fi
     ;;
 esac
