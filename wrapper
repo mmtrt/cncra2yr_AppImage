@@ -139,9 +139,12 @@ case "$1" in
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
     ;;
-  "glxinfo"|"glxheads"|"vulkaninfo"|"vkcube")
+  "eglinfo"|"es2_info"|"es2gears_wayland"|"es2gears_x11"|"es2tri"|"glxinfo"|"glxheads"|"glxgears"|"glxdemo"|"vulkaninfo")
     "$@"
     ;;
+   "vkcube"|"vkcubepp"|"vkcube-wayland")
+    export VK_INSTANCE_LAYERS="VK_LAYER_MESA_overlay"
+    "$@"
   *)
     if [ -d "$APPDIR/winedata/.wine" ]; then
      "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}"
