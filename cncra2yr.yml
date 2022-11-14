@@ -41,6 +41,7 @@ AppDir:
       - coreutils
       - mesa-utils
       - unionfs-fuse
+      - vulkan-tools
       - libfuse2
       - libfuse3-3
       - libnvidia-compute-520:i386
