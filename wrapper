@@ -24,8 +24,9 @@ export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
 
-# Symlink stuff
+if [ ! -d "$progHome" ];then
 mkdir -p "$progHome" || exit 1
+fi
 
 dkico() {
 if [[ ! -f $progIcoD ]]; then
@@ -145,6 +146,7 @@ case "$1" in
    "vkcube"|"vkcubepp"|"vkcube-wayland")
     export VK_INSTANCE_LAYERS="VK_LAYER_MESA_overlay"
     "$@"
+    ;;
   *)
     if [ -d "$APPDIR/winedata/.wine" ]; then
      "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}"
