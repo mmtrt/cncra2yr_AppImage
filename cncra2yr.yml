@@ -42,6 +42,7 @@ AppDir:
       - mesa-utils
       - unionfs-fuse
       - libfuse2
+      - libfuse3-3
       - libnvidia-compute-520:i386
       - libnvidia-decode-520:i386
       - libnvidia-encode-520:i386
