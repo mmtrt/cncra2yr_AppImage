@@ -21,9 +21,9 @@ sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
 
 mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
 
-NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
+# NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
-sed -i "s|520|$NVDV|" cncra2yr.yml
+# sed -i "s|520|$NVDV|" cncra2yr.yml
 
 ./builder --recipe cncra2yr.yml
 
@@ -74,9 +74,9 @@ rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp
 
 mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
 
-NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
+# NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
-sed -i "s|520|$NVDV|" cncra2yr.yml
+# sed -i "s|520|$NVDV|" cncra2yr.yml
 
 sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 
