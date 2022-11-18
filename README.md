@@ -18,6 +18,9 @@
  * This AppImage uses [WINE AppImage Devel](https://github.com/mmtrt/WINE_AppImage/releases/tag/continuous-devel) which is separate AppImage and requires it to function as it does not have any WINE, So Download WINE AppImage make it executable also make sure you have single copy of it present any of these path `"$HOME/Downloads"` `"$HOME/bin"` `"$HOME/.local/bin"`.
  * This AppImage has two versions one stable only contains required files to install game with all redistributable which takes quite time to first boot as it installs all theses requirements and other one have all these preinstalled inside wineprefix which boots instant.
 
+## Note
+ * If you get `Microsoft.Xna.Framework.dll` error then do `mkdir -p $HOME/.cncra2yr/.wine/drive_c/windows/Microsoft.NET/assembly/GAC_32` in terminal.
+
 ## Get Started
 
 Download the latest release from
