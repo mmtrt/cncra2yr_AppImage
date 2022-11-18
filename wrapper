@@ -80,6 +80,7 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
 if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
 
 cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+cp "$APPDIR/winedata/.wine/drive_c/windows/system32/mscoree.dll" "$progHome/Resources"
 
 fi
 
