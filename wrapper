@@ -81,6 +81,7 @@ if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
 
 cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 cp "$APPDIR/winedata/.wine/drive_c/windows/system32/mscoree.dll" "$progHome/Resources"
+mkdir -p "$progHome/.wine/drive_c/windows/Microsoft.NET/assembly/GAC_32"
 
 fi
 
