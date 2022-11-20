@@ -28,7 +28,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Set YR_VER
       - name: Run version script
@@ -52,7 +52,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Set YR_VER
       - name: Run version script
@@ -79,16 +79,12 @@ jobs:
         with:
           name: cncra2yr-continuous-x86_64.AppImage
 
-      - name: release
-        uses: marvinpinto/action-automatic-releases@latest
+      - name: Release
+        uses: mmtrt/action-gh-release@v1
         with:
-          title: cncra2yr stable
-          automatic_release_tag: stable
-          prerelease: false
-          draft: false
-          files: |
-            cncra2yr-continuous-x86_64.AppImage
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          name: cncra2yr stable
+          tag_name: stable
+          files: /home/runner/work/cncra2yr_AppImage/cncra2yr_AppImage/cncra2yr-continuous-x86_64.AppImage/*
 
   release-stable-wp:
     needs: [cncra2yr-wp]
@@ -99,13 +95,9 @@ jobs:
         with:
           name: cncra2yr-continuous-wp-x86_64.AppImage
 
-      - name: release
-        uses: marvinpinto/action-automatic-releases@latest
+      - name: Release
+        uses: mmtrt/action-gh-release@v1
         with:
-          title: cncra2yr stable with wineprefix
-          automatic_release_tag: stable-wp
-          prerelease: false
-          draft: false
-          files: |
-            cncra2yr-continuous-wp-x86_64.AppImage
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          name: cncra2yr stable with wineprefix
+          tag_name: stable-wp
+          files: /home/runner/work/cncra2yr_AppImage/cncra2yr_AppImage/cncra2yr-continuous-wp-x86_64.AppImage/*
