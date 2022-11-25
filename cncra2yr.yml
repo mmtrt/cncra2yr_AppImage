@@ -65,6 +65,7 @@ AppDir:
       - libglvnd0:i386
       - libglx0:i386
       - libglx-mesa0:i386
+      - libmpg123-0:i386
       - mesa-vdpau-drivers:i386
       - mesa-va-drivers:i386
       - mesa-vulkan-drivers:i386
