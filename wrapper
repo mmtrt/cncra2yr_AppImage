@@ -103,7 +103,7 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
     ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
     ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
 
-    winetricks -q xna40
+    winetricks -q xna40 vcrun2010
 
     # silent flag for this /silent
     wine "$APPDIR"/winedata/CnCNet5_YR_Installer.exe
