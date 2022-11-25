@@ -58,6 +58,7 @@ mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,ahk,xna40} ; cp dotNetF
 cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; rm wrapper
 
 # Create WINEPREFIX
+mkdir -p "$WINEPREFIX/drive_c/windows/assembly"
 ./wine-stable.AppImage winetricks -q xna40 ; sleep 5
 
 # Create empty files
