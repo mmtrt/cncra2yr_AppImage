@@ -109,6 +109,11 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
     wine "$APPDIR"/winedata/CnCNet5_YR_Installer.exe
 
   fi
+  
+  # crazy workaround for framework dll error
+  rmdir "$progHome/.wine/drive_c/windows/Microsoft.NET/assembly/GAC_32" 2&>/dev/null
+  mkdir -p "$progHome/.wine/drive_c/windows/Microsoft.NET/assembly/GAC_32" 2&>/dev/null
+  
 fi
 
 atexit ()
