@@ -77,39 +77,38 @@ if [[ ! -f $progHome/ra2.mix ]] && [[ ! -f $WINEPREFIX/drive_c/Westwood/RA2/ra2.
 fi
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
+  if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
 
-cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-cp "$APPDIR/winedata/.wine/drive_c/windows/system32/mscoree.dll" "$progHome/Resources"
-mkdir -p "$progHome/.wine/drive_c/windows/Microsoft.NET/assembly/GAC_32"
+    cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+    cp "$APPDIR/winedata/.wine/drive_c/windows/system32/mscoree.dll" "$progHome/Resources"
 
-fi
-
-# Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
-if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
-  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX"
-  if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
-    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
-    trap atexit EXIT
   fi
-  export WINEPREFIX="$MNT_WINEPREFIX"
-elif [[ ! -d "$APPDIR/winedata/.wine" ]]; then
 
-mkdir -p "$HOME"/.cache/{wine,winetricks}
-mkdir -p "$HOME"/.cache/winetricks/{dotnet40,xna40}
+  # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
+  if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
+    mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX"
+    if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
+      unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+      trap atexit EXIT
+    fi
+    export WINEPREFIX="$MNT_WINEPREFIX"
+  elif [[ ! -d "$APPDIR/winedata/.wine" ]]; then
 
-find "$HOME/.cache/wine/" "$HOME/.cache/winetricks/" -type l -delete &>/dev/null
+    mkdir -p "$HOME"/.cache/{wine,winetricks}
+    mkdir -p "$HOME"/.cache/winetricks/{dotnet40,xna40}
 
-ln -s "$HERE"/winedata/wine-mono-*-x86.msi "$HOME"/.cache/wine/
-ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
-ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
+    find "$HOME/.cache/wine/" "$HOME/.cache/winetricks/" -type l -delete &>/dev/null
 
-winetricks -q xna40
+    ln -s "$HERE"/winedata/wine-mono-*-x86.msi "$HOME"/.cache/wine/
+    ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
+    ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
 
-# silent flag for this /silent
-wine "$APPDIR"/winedata/CnCNet5_YR_Installer.exe
+    winetricks -q xna40
 
-fi
+    # silent flag for this /silent
+    wine "$APPDIR"/winedata/CnCNet5_YR_Installer.exe
+
+  fi
 fi
 
 atexit ()
