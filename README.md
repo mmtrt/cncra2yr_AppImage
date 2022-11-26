@@ -17,9 +17,6 @@
  * This AppImage does not have game files see requirements below before getting angry at me.
  * This AppImage has two versions one stable only contains required files to install game with all redistributable which takes quite time to first boot as it installs all theses requirements and other one have all these preinstalled inside wineprefix which boots instant.
 
-## Note
- * If you get `Microsoft.Xna.Framework.dll` error then do `mkdir -p $HOME/.cncra2yr/.wine/drive_c/windows/Microsoft.NET/assembly/GAC_32` in terminal.
-
 ## Get Started
 
 Download the latest release from
