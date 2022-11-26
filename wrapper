@@ -7,17 +7,17 @@ progBin="clientxna.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-progRealPath="$APPDIR/winedata/.wine/drive_c/Westwood/RA2"
-# env used by unionfs-fuse
-# WINEPREFIX in the AppDir
-RO_WINEPREFIX="$APPDIR/winedata/.wine"
-RW_WINEPREFIX="$progHome/.wine"
-MNT_WINEPREFIX=/tmp/."${progName}".unionfs
+  progRealPath="$APPDIR/winedata/.wine/drive_c/Westwood/RA2"
+  # env used by unionfs-fuse
+  # WINEPREFIX in the AppDir
+  RO_WINEPREFIX="$APPDIR/winedata/.wine"
+  RW_WINEPREFIX="$progHome/.wine"
+  MNT_WINEPREFIX=/tmp/."${progName}".unionfs
 else
-progRealPath="$progHome/Westwood/RA2"
-# WINE env
-export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
-mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
+  progRealPath="$progHome/Westwood/RA2"
+  # WINE env
+  export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+  mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
 fi
 export WINEARCH=${WINEARCH:-"win32"}
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mshtml="}
@@ -25,7 +25,7 @@ export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
 
 if [ ! -d "$progHome" ];then
-mkdir -p "$progHome" || exit 1
+  mkdir -p "$progHome" || exit 1
 fi
 
 dkico() {
