@@ -74,7 +74,7 @@ chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppI
 rm wrapper
 
 # Create WINEPREFIX
-
+./wine-stable.AppImage wineboot -i ; sleep 2
 ./wine-stable.AppImage reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
 
 # Removing any existing user data
