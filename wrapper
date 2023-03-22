@@ -14,10 +14,9 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
   RW_WINEPREFIX="$progHome/.wine"
   MNT_WINEPREFIX=/tmp/."${progName}".unionfs
 else
-  progRealPath="$progHome/Westwood/RA2"
+  progRealPath="$APPDIR/winedata/yr"
   # WINE env
   export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
-  mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
 fi
 export WINEARCH=${WINEARCH:-"win32"}
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
@@ -91,11 +90,9 @@ if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
   fi
   export WINEPREFIX="$MNT_WINEPREFIX"
 
-else
-if [ ! -d "$WINEPREFIX" ]; then
+elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-fi
 fi
 
 atexit ()
