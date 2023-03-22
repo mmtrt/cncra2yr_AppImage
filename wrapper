@@ -1,31 +1,32 @@
 # APP env
 progName="cncra2yr"
-progArch="-i686"
+progArch="-x86_64"
 progVer=
 progHome="$HOME/.$progName"
-progBin="clientxna.exe"
+progBin="CnCNetYRLauncher.sh"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-progRealPath="$APPDIR/winedata/.wine/drive_c/Westwood/RA2"
-# env used by unionfs-fuse
-# WINEPREFIX in the AppDir
-RO_WINEPREFIX="$APPDIR/winedata/.wine"
-MNT_WINEPREFIX="$progHome/.wine"
-RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
+  progRealPath="$APPDIR/winedata/yr"
+  # env used by unionfs-fuse
+  # WINEPREFIX in the AppDir
+  RO_WINEPREFIX="$APPDIR/winedata/.wine"
+  RW_WINEPREFIX="$progHome/.wine"
+  MNT_WINEPREFIX=/tmp/."${progName}".unionfs
 else
-progRealPath="$progHome/Westwood/RA2"
-# WINE env
-export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
-mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
+  progRealPath="$progHome/Westwood/RA2"
+  # WINE env
+  export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+  mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2"
 fi
 export WINEARCH=${WINEARCH:-"win32"}
-export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mshtml="}
+export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
 
-# Symlink stuff
-mkdir -p "$progHome" || exit 1
+if [ ! -d "$progHome" ];then
+  mkdir -p "$progHome" || exit 1
+fi
 
 dkico() {
 if [[ ! -f $progIcoD ]]; then
@@ -45,7 +46,7 @@ echo "TryExec=${OWD}/${progName}_${progArch}.AppImage"
 echo "Exec=${OWD}/${progName}_${progArch}.AppImage %F"
 echo "Categories=Game;"
 echo "Terminal=false"
-echo "StartupWMClass=CnCNetYRLauncher.exe,clientxna.exe,game.exe,gamemd-spawn.exe"
+echo "StartupWMClass=CnCNetYRLauncher.sh,gamemd-spawn.exe"
 echo "Keywords=game"
 } >> "$DesktopFilePath"
 fi
@@ -75,38 +76,24 @@ if [[ ! -f $progHome/ra2.mix ]] && [[ ! -f $WINEPREFIX/drive_c/Westwood/RA2/ra2.
   exit 1
 fi
 
-if [ -d "$APPDIR/winedata/.wine" ]; then
-if [[ ! -f $progHome/CnCNetYRLauncher.exe ]]; then
+if [[ ! -f $progHome/CnCNetYRLauncher.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
 
-cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 
 fi
 
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
 if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
-  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY"
+  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX"
   if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
-    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
     trap atexit EXIT
   fi
   export WINEPREFIX="$MNT_WINEPREFIX"
-elif [[ ! -d "$APPDIR/winedata/.wine" ]]; then
 
-mkdir -p "$HOME"/.cache/{wine,winetricks}
-mkdir -p "$HOME"/.cache/winetricks/{dotnet40,xna40}
-
-find "$HOME/.cache/wine/" "$HOME/.cache/winetricks/" -type l -delete &>/dev/null
-
-ln -s "$HERE"/winedata/wine-mono-*-x86.msi "$HOME"/.cache/wine/
-ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
-ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
-
-winetricks -q xna40
-
-# silent flag for this /silent
-wine "$HERE"/winedata/CnCNet5_YR_Installer.exe
-
-fi
+else
+  "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 fi
 
 atexit ()
@@ -139,11 +126,14 @@ case "$1" in
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
     ;;
+  "eglinfo"|"es2_info"|"es2gears_wayland"|"es2gears_x11"|"es2tri"|"glxinfo"|"glxheads"|"glxgears"|"glxdemo"|"vulkaninfo")
+    "$@"
+    ;;
+   "vkcube"|"vkcubepp"|"vkcube-wayland")
+    export VK_INSTANCE_LAYERS="VK_LAYER_MESA_overlay"
+    "$@"
+    ;;
   *)
-    if [ -d "$APPDIR/winedata/.wine" ]; then
-     "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}" 2>/dev/null
-    else
-     "$WINELOADER" "$WINEPREFIX"/drive_c/Westwood/RA2/Resources/"$progBin" "${args[@]}" 2>/dev/null
-    fi
+    ./"$progHome/$progBin" "${args[@]}"
     ;;
 esac

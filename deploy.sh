@@ -41,7 +41,7 @@ mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
 
 cncra2yrswp () {
 
-export WINEDLLOVERRIDES="mshtml="
+export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEARCH="win32"
 export WINEPREFIX="/home/runner/work/cncra2yr_AppImage/cncra2yr_AppImage/AppDir/winedata/.wine"
 export WINEDEBUG="-all"
@@ -65,40 +65,26 @@ mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-
 
 YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
-wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
-wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
-wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
-wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
+wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package.tar.gz"
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
 chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage
 
-# Create winetricks & wine cache
-mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,ahk,xna40} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
-cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; rm wrapper
-
-ls -al
+# Remove wrapper
+rm wrapper
 
 # Create WINEPREFIX
-mkdir -p "$WINEPREFIX/drive_c/windows/assembly"
-./wine-stable.AppImage winetricks -f -q xna40 vcrun2010; sleep 5
 
-# Create empty files
-mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood/RA2" || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
-
-# Install game
-./wine-stable.AppImage CnCNet5_YR_Installer.exe /silent ; sleep 5
-
-ls -al $WINEPREFIX/drive_c/Westwood/RA2
-ls -al /tmp
+./wine-stable.AppImage reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
 
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
-( cd "$WINEPREFIX/drive_c/Westwood/RA2" ; rm BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix ) || true
 
 rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp
 
-mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
+mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package.tar.gz -C AppDir/winedata/yr ; rm package.tar.gz
+
+chmod +x AppDir/winedata/yr/CnCNetYRLauncher.sh AppDir/winedata/yr/Resources/yr-wine.sh
 
 sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 

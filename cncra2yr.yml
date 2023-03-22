@@ -31,6 +31,8 @@ AppDir:
         # key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xFCAE110B1118213C'
       - sourceline: 'deb https://ppa.launchpadcontent.net/oibaf/graphics-drivers/ubuntu lunar main'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x957D2708A03A4626'
+      - sourceline: 'deb https://packages.microsoft.com/ubuntu/22.10/prod kinetic main'
+        key_url: 'https://packages.microsoft.com/keys/microsoft.asc'
 
     include:
       - wine-staging-i386=7.22~kinetic-1
@@ -42,8 +44,7 @@ AppDir:
       - mesa-utils
       - unionfs-fuse
       - vulkan-tools
-      - libfuse2
-      - libfuse3-3
+      - dotnet-runtime-7.0
       - winbind:i386
       # - libnvidia-compute-520:i386
       # - libnvidia-decode-520:i386
