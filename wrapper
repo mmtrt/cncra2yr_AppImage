@@ -92,8 +92,10 @@ if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
   export WINEPREFIX="$MNT_WINEPREFIX"
 
 else
+if [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+fi
 fi
 
 atexit ()
@@ -134,6 +136,6 @@ case "$1" in
     "$@"
     ;;
   *)
-    ./"$progHome/$progBin" "${args[@]}"
+    "$progHome/./$progBin" "${args[@]}"
     ;;
 esac
