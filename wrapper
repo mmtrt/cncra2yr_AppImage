@@ -79,6 +79,10 @@ fi
 if [[ ! -f $progHome/CnCNetYRLauncher.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
+  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
+  sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
+  sed -i "s|dotnet|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/CnCNetYRLauncher.sh
 
 fi
 
