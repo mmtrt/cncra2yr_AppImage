@@ -3,7 +3,9 @@ progName="cncra2yr"
 progArch="-x86_64"
 progVer=
 progHome="$HOME/.$progName"
-progBin="CnCNetYRLauncher.sh"
+progUGL="$progHome/Resources/Binaries/UniversalGL"
+progBin="$progUGL/clientogl.dll"
+progEXE="gamemd-spawn.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
@@ -60,8 +62,7 @@ Copy the following RA2|YR game files to $progHome \n
  > language.mix
  > langmd.mix"
 
-if [[ ! -f $progHome/ra2.mix ]] && [[ ! -f $WINEPREFIX/drive_c/Westwood/RA2/ra2.mix ]]; then
-  mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" 2>/dev/null
+if [[ ! -f $progHome/ra2.mix ]]; then
   if [ -x /usr/bin/zenity ] ; then
     LD_LIBRARY_PATH="" zenity --error --text "${msg}" 2>/dev/null || exit 0
   elif [ -x /usr/bin/kdialog ] ; then
@@ -91,13 +92,18 @@ if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
   export WINEPREFIX="$MNT_WINEPREFIX"
 
 elif [ ! -d "$WINEPREFIX" ]; then
+  "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
+  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
+  sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
+  sed -i "s|dotnet|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/CnCNetYRLauncher.sh
 fi
 
 atexit ()
 {
-  while pgrep -f "clientxna" ; do sleep 1 ; done
+  while pgrep -f "dotnet" ; do sleep 1 ; done
   pkill -f "unionfs-fuse"
   sleep 1
   rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
@@ -122,6 +128,12 @@ case "$1" in
   "winetricks")
     winetricks "$2" "$3"
     ;;
+    "gamemd-spawn.exe")
+    "$WINELOADER" "$1" "$2"
+    ;;
+    "clientogl.dll")
+    $APPDIR/winedata/./dotnet "${args[@]}"
+    ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
     ;;
@@ -133,6 +145,6 @@ case "$1" in
     "$@"
     ;;
   *)
-    "$progHome/./$progBin" "${args[@]}"
+    "$APPDIR"/winedata/./dotnet "$progBin" "${args[@]}"
     ;;
 esac
