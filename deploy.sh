@@ -14,7 +14,7 @@ wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -
 rm builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
 # Add static appimage runtime
-mkdir -p appimage-build/prime
+mkdir -p appimage-build/prime AppDir/winedata
 wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-x86_64" -O appimage-build/prime/runtime-x86_64
 
 mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata/yr ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
