@@ -123,6 +123,9 @@ for i; do # for i = for i in "$@"
     fi
 done
 
+echo "$1"
+echo "$2"
+
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
 case "$1" in
