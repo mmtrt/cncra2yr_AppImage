@@ -79,6 +79,8 @@ fi
 if [[ ! -f $progHome/CnCNetYRLauncher.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
+  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
 
 fi
 
@@ -95,6 +97,8 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
+  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
 fi
 
 atexit ()
