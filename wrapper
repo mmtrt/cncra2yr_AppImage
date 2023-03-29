@@ -55,14 +55,14 @@ fi
 
 msg="Note: This AppImage does not include the actual game so you have to buy or use your bought copy game files in order play.\n
 Copy the following RA2|YR game files to $progHome \n
- > BINKW32.dll
- > BLOWFISH.dll
+ > BINKW32.DLL
+ > Blowfish.dll
  > ra2.mix
  > ra2md.mix
  > language.mix
  > langmd.mix"
 
-if [[ ! -f $progHome/ra2.mix ]]; then
+if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $progHome/language.mix ]] || [[ ! -f $progHome/langmd.mix ]] || [[ ! -f $progHome/Blowfish.dll ]] || [[ ! -f $progHome/BINKW32.DLL ]] ; then
   if [ -x /usr/bin/zenity ] ; then
     LD_LIBRARY_PATH="" zenity --error --text "${msg}" 2>/dev/null || exit 0
   elif [ -x /usr/bin/kdialog ] ; then
