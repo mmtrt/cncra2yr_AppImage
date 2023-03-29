@@ -79,10 +79,6 @@ fi
 if [[ ! -f $progHome/CnCNetYRLauncher.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
-  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
-  sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
-  sed -i "s|dotnet|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/CnCNetYRLauncher.sh
 
 fi
 
@@ -99,10 +95,6 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
-  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
-  sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
-  sed -i "s|dotnet|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/CnCNetYRLauncher.sh
 fi
 
 atexit ()
@@ -135,8 +127,12 @@ case "$1" in
   "winetricks")
     winetricks "$2" "$3"
     ;;
-    "gamemd-spawn.exe")
-    "$WINELOADER" "$1" "$2"
+  "gamemd-spawn.exe")
+    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
+    cat $progHome/Resources/yr-wine.sh
+   "$WINELOADER" "$1" "$2"
+    sed -i "s|$(grep -Eo /ho.*.AppImage $progHome/Resources/yr-wine.sh)|wine|" $progHome/Resources/yr-wine.sh
+    cat $progHome/Resources/yr-wine.sh
     ;;
     "clientogl.dll")
     $APPDIR/winedata/./dotnet "${args[@]}"
