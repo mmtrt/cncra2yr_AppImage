@@ -23,7 +23,7 @@ fi
 export WINEARCH=${WINEARCH:-"win32"}
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
-export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
+export WINELOADER=${WINELOADER:-"$APPDIR/winedata/./wine-stable.AppImage"}
 
 if [ ! -d "$progHome" ];then
   mkdir -p "$progHome" || exit 1

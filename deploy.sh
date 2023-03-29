@@ -29,6 +29,9 @@ tar -xf package.tar.gz -C ra2yr-mp/winedata/yr ; rm package.tar.gz
 
 sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
 
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
+chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
+
 cp -r "ra2yr-mp/"* AppDir
 
 chmod +x AppDir/winedata/yr/CnCNetYRLauncher.sh AppDir/winedata/yr/Resources/yr-wine.sh
@@ -71,8 +74,8 @@ YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releas
 
 wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package.tar.gz"
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
-chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/test3/wine-stable-i386_4.0.4-x86_64.AppImage
+chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
 
 # Remove wrapper
 rm wrapper
