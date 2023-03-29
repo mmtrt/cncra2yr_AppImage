@@ -118,6 +118,18 @@ done
 echo "$1"
 echo "$2"
 
+if [ ! -f "$progHome/version_u" ]; then
+ if [ $(grep -c AppImage $progHome/Resources/yr-wine.sh) = 0 ]; then
+    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
+    cat $progHome/Resources/yr-wine.sh
+ fi
+elif [ -f "$progHome/version_u" ]; then
+ if [ $(grep -c AppImage $progHome/Resources/yr-wine.sh) = 1 ]; then
+    sed -i "s|$(grep -Eo /ho.*.AppImage $progHome/Resources/yr-wine.sh)|wine|" $progHome/Resources/yr-wine.sh
+    cat $progHome/Resources/yr-wine.sh
+ fi
+fi
+
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
 case "$1" in
@@ -128,14 +140,10 @@ case "$1" in
     winetricks "$2" "$3"
     ;;
   "gamemd-spawn.exe")
-    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
-    cat $progHome/Resources/yr-wine.sh
-   "$WINELOADER" "$1" "$2"
-    sed -i "s|$(grep -Eo /ho.*.AppImage $progHome/Resources/yr-wine.sh)|wine|" $progHome/Resources/yr-wine.sh
-    cat $progHome/Resources/yr-wine.sh
+    "$WINELOADER" "$1" "$2"
     ;;
-    "clientogl.dll")
-    $APPDIR/winedata/./dotnet "${args[@]}"
+  "clientogl.dll")
+    "$APPDIR"/winedata/./dotnet "${args[@]}"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
