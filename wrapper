@@ -79,8 +79,8 @@ fi
 if [[ ! -f $progHome/CnCNetYRLauncher.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
-  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
+  sed -i 's| bin|/bin|' "$progHome"/CnCNetYRLauncher.sh
+  sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
 
 fi
 
@@ -97,8 +97,8 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' $progHome/CnCNetYRLauncher.sh
-  sed -i 's| bin|/bin|' $progHome/Resources/yr-wine.sh
+  sed -i 's| bin|/bin|' "$progHome"/CnCNetYRLauncher.sh
+  sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
 fi
 
 atexit ()
@@ -119,18 +119,13 @@ for i; do # for i = for i in "$@"
     fi
 done
 
-echo "$1"
-echo "$2"
-
 if [ ! -f "$progHome/version_u" ]; then
- if [ $(grep -c AppImage $progHome/Resources/yr-wine.sh) = 0 ]; then
-    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" $progHome/Resources/yr-wine.sh
-    cat $progHome/Resources/yr-wine.sh
+ if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]; then
+    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
  fi
 elif [ -f "$progHome/version_u" ]; then
- if [ $(grep -c AppImage $progHome/Resources/yr-wine.sh) = 1 ]; then
-    sed -i "s|$(grep -Eo /ho.*.AppImage $progHome/Resources/yr-wine.sh)|wine|" $progHome/Resources/yr-wine.sh
-    cat $progHome/Resources/yr-wine.sh
+ if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 1 ]; then
+    sed -i "s|$(grep -Eo /ho.*.AppImage "$progHome"/Resources/yr-wine.sh)|wine|" "$progHome"/Resources/yr-wine.sh
  fi
 fi
 
