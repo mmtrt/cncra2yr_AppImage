@@ -16,7 +16,7 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
   RW_WINEPREFIX="$progHome/.wine"
   MNT_WINEPREFIX=/tmp/."${progName}".unionfs
 else
-  progRealPath="$APPDIR/winedata/yr"
+  progRealPath="$APPDIR/winedata"
   # WINE env
   export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
 fi
@@ -96,9 +96,7 @@ if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
 elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
-  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' "$progHome"/CnCNetYRLauncher.sh
-  sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
+  tar -xf $progRealPath/package.tar.gz -C $progHome
 fi
 
 atexit ()
