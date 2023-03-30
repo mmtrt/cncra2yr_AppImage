@@ -25,12 +25,11 @@ wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/pack
 
 wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
 
-
 cp package.tar.gz ra2yr-mp/winedata/ ; rm package.tar.gz
 
 sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/test3/wine-stable-i386_4.0.4-x86_64.AppImage
 chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
 
 cp -r "ra2yr-mp/"* AppDir
