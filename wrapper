@@ -119,14 +119,9 @@ for i; do # for i = for i in "$@"
     fi
 done
 
-if [ ! -f "$progHome/version_u" ]; then
- if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]; then
-    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
- fi
-elif [ -f "$progHome/version_u" ]; then
- if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 1 ]; then
-    sed -i "s|$(grep -Eo /ho.*.AppImage "$progHome"/Resources/yr-wine.sh)|wine|" "$progHome"/Resources/yr-wine.sh
- fi
+if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]; then
+  sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
+  sed -i "s|e.sh=.*|e.sh=$(sha1sum $progHome/Resources/yr-wine.sh|awk '{print $1}'),0|" "$progHome"/version
 fi
 
 # Launch wineboot/winecfg/winetricks if requested.
