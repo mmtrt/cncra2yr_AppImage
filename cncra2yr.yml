@@ -87,10 +87,6 @@ AppDir:
       - usr/share/zoneinfo-icu
       - usr/share/zsh
 
-  runtime:
-    env:
-      LIBGL_DRIVERS_PATH: '${APPDIR}/usr/lib/i386-linux-gnu/dri:${APPDIR}/usr/lib/x86_64-linux-gnu/dri:${LIBGL_DRIVERS_PATH}'
-
 AppImage:
   update-information: gh-releases-zsync|mmtrt|cncra2yr_AppImage|stable|cncra2yr*.AppImage.zsync
   #sign-key: None
