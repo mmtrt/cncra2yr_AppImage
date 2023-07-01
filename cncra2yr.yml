@@ -88,7 +88,7 @@ AppDir:
       - usr/share/zsh
 
 AppImage:
-  update-information: gh-releases-zsync|mmtrt|cncra2yr_AppImage|stable|cncra2yr*.AppImage.zsync
+  update-information: gh-releases-zsync|mmtrt|cncra2yr_AppImage|dotnet|cncra2yr*.AppImage.zsync
   #sign-key: None
   arch: x86_64
 
