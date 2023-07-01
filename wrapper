@@ -103,7 +103,7 @@ fi
 
 atexit ()
 {
-  while pgrep -f "dotnet" ; do sleep 1 ; done
+  while pgrep -f "clientogl" ; do sleep 1 ; done
   pkill -f "unionfs-fuse"
   sleep 1
   rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
