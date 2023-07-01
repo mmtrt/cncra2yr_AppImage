@@ -78,7 +78,7 @@ rm wrapper
 
 # Create WINEPREFIX
 mkdir -p "$WINEPREFIX/drive_c/windows/assembly"
-./wine-stable.AppImage winetricks -f -q xna40 vcrun2010; sleep 5
+./wine-stable.AppImage winetricks -q xna40 vcrun2010; sleep 5
 
 # Create empty files
 mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood/RA2" || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
