@@ -82,7 +82,7 @@ jobs:
           name: cncra2yr-continuous-x86_64.AppImage
 
       - name: release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
         with:
           title: cncra2yr stable
           automatic_release_tag: stable
@@ -102,7 +102,7 @@ jobs:
           name: cncra2yr-continuous-wp-x86_64.AppImage
 
       - name: release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
         with:
           title: cncra2yr stable with wineprefix
           automatic_release_tag: stable-wp
