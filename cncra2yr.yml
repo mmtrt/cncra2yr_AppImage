@@ -175,6 +175,8 @@ AppDir:
     env:
       LIBGL_DRIVERS_PATH: '${APPDIR}/usr/lib/i386-linux-gnu/dri:${APPDIR}/usr/lib/x86_64-linux-gnu/dri:${LIBGL_DRIVERS_PATH}'
 
+    path_mappings:
+    - /opt/wine-stable:$APPDIR/opt/wine-stable
 
 AppImage:
   update-information: gh-releases-zsync|mmtrt|cncra2yr_AppImage|stable|cncra2yr*.AppImage.zsync
