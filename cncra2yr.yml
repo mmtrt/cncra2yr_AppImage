@@ -40,10 +40,12 @@ AppDir:
       - perl
       - coreutils
       - mesa-utils
+      - mesa-utils-bin
       - unionfs-fuse
       - vulkan-tools
-      - libfuse2
-      - libfuse3-3
+      # - libfuse2
+      # - libfuse3-3
+      - libmspack0
       - winbind:i386
       # - libnvidia-compute-520:i386
       # - libnvidia-decode-520:i386
