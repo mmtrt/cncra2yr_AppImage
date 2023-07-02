@@ -94,9 +94,9 @@ mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar.g
 
 chmod +x AppDir/winedata/yr/CnCNetYRLauncher.sh AppDir/winedata/yr/Resources/yr-wine.sh
 
-sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
+sed -i -e 's|progVer=|progVer='"${YR_VERSION}-dotnet_WP"'|g' AppDir/wrapper
 
-sed -i 's/stable|/stable-wp|/' cncra2yr.yml
+sed -i 's/dotnet|/dotnet-wp|/' cncra2yr.yml
 
 ./squashfs-root/AppRun --recipe cncra2yr.yml
 
