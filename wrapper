@@ -20,7 +20,6 @@ else
   # WINE env
   export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
 fi
-export WINEARCH=${WINEARCH:-"win32"}
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 export WINELOADER=${WINELOADER:-"$APPDIR/winedata/./wine-stable.AppImage"}

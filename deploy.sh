@@ -47,7 +47,6 @@ chmod +x AppDir/winedata/yr/CnCNetYRLauncher.sh AppDir/winedata/yr/Resources/yr-
 cncra2yrswp () {
 
 export WINEDLLOVERRIDES="mscoree,mshtml="
-export WINEARCH="win32"
 export WINEPREFIX="/home/runner/work/cncra2yr_AppImage/cncra2yr_AppImage/AppDir/winedata/.wine"
 export WINEDEBUG="-all"
 
