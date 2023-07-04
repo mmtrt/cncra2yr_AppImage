@@ -119,13 +119,26 @@ for i; do # for i = for i in "$@"
     fi
 done
 
+if [ -f "$progHome/version_u" ]; then
+
+InVer=$(cat $progHome/version | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
+UpVer=$(cat $progHome/version_u | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
+
+if [[ $UpVer < $InVer ]]; then
+  if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]]; then
+    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
+  fi
+else
+  if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 1 ]]; then
+    sed -i "s|$(grep -Eo "/.*.AppImage" "$progHome"/Resources/yr-wine.sh)|wine|" "$progHome"/Resources/yr-wine.sh
+  fi
+fi
+
+fi
+
 if [ ! -f "$progHome/version_u" ]; then
  if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]; then
     sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
- fi
-elif [ -f "$progHome/version_u" ]; then
- if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 1 ]; then
-    sed -i "s|$(grep -Eo /ho.*.AppImage "$progHome"/Resources/yr-wine.sh)|wine|" "$progHome"/Resources/yr-wine.sh
  fi
 fi
 
