@@ -21,11 +21,11 @@ mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata/yr ; cp cncra2yr.desktop ra2
 
 YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
-wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package.tar.gz"
+wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package-v9.tar.xz"
 
 wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
 
-tar -xf package*.tar.gz -C ra2yr-mp/winedata/yr ; rm package*.tar.gz
+tar -xf package*.tar.xz -C ra2yr-mp/winedata/yr ; rm package*.tar.xz
 
 sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
 
@@ -71,7 +71,7 @@ wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-a
 
 YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
-wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package.tar.gz"
+wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package-v9.tar.xz"
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/test5-devel/wine-devel-wow64_8.11-x86_64.AppImage -O wine-stable.AppImage
 chmod +x *.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
@@ -89,7 +89,7 @@ sleep 2 ; pkill winecfg
 
 rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp ; ls -al AppDir/winedata ; ls -al AppDir/winedata/.wine
 
-mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar.gz -C AppDir/winedata/yr ; rm package*.tar.gz
+mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar.xz -C AppDir/winedata/yr ; rm package*.tar.xz
 
 chmod +x AppDir/winedata/yr/CnCNetYRLauncher.sh AppDir/winedata/yr/Resources/yr-wine.sh
 
