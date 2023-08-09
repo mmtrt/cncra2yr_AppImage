@@ -103,7 +103,7 @@ fi
 atexit ()
 {
   while pgrep -f "clientogl" ; do sleep 1 ; done
-  pkill -f "unionfs-fuse"
+  kill $(ps -ef | grep $progName.unionfs | awk '{print $2}' | head -1)
   sleep 1
   rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
 }
