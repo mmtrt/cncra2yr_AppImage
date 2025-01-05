@@ -3,7 +3,7 @@ progName="cncra2yr"
 progArch="-x86_64"
 progVer=
 progHome="$HOME/.$progName"
-progUGL="$progHome/Resources/Binaries/UniversalGL"
+progUGL="$progHome/Resources/BinariesNET8/UniversalGL"
 progBin="$progUGL/clientogl.dll"
 progEXE="gamemd-spawn.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
@@ -46,7 +46,7 @@ echo "TryExec=${OWD}/${progName}_${progArch}.AppImage"
 echo "Exec=${OWD}/${progName}_${progArch}.AppImage %F"
 echo "Categories=Game;"
 echo "Terminal=false"
-echo "StartupWMClass=CnCNetYRLauncher.sh,gamemd-spawn.exe"
+echo "StartupWMClass=YRLauncherUnix.sh,gamemd-spawn.exe"
 echo "Keywords=game"
 } >> "$DesktopFilePath"
 fi
@@ -75,11 +75,11 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
-if [[ ! -f $progHome/CnCNetYRLauncher.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
+if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' "$progHome"/CnCNetYRLauncher.sh
-  sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
+  sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+#   sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
 
 fi
 
@@ -96,8 +96,8 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' "$progHome"/CnCNetYRLauncher.sh
-  sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
+  sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+#   sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
 fi
 
 atexit ()
@@ -118,28 +118,28 @@ for i; do # for i = for i in "$@"
     fi
 done
 
-if [ -f "$progHome/version_u" ]; then
-
-InVer=$(cat $progHome/version | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
-UpVer=$(cat $progHome/version_u | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
-
-if [[ $UpVer < $InVer ]]; then
-  if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]]; then
-    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
-  fi
-else
-  if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 1 ]]; then
-    sed -i "s|$(grep -Eo "/.*.AppImage" "$progHome"/Resources/yr-wine.sh)|wine|" "$progHome"/Resources/yr-wine.sh
-  fi
-fi
-
-fi
-
-if [ ! -f "$progHome/version_u" ]; then
- if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]; then
-    sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
- fi
-fi
+# if [ -f "$progHome/version_u" ]; then
+#
+# InVer=$(cat $progHome/version | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
+# UpVer=$(cat $progHome/version_u | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
+#
+# if [[ $UpVer < $InVer ]]; then
+#   if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]]; then
+#     sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
+#   fi
+# else
+#   if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 1 ]]; then
+#     sed -i "s|$(grep -Eo "/.*.AppImage" "$progHome"/Resources/yr-wine.sh)|wine|" "$progHome"/Resources/yr-wine.sh
+#   fi
+# fi
+#
+# fi
+#
+# if [ ! -f "$progHome/version_u" ]; then
+#  if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]; then
+#     sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
+#  fi
+# fi
 
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.

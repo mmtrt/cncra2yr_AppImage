@@ -21,20 +21,20 @@ mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata/yr ; cp cncra2yr.desktop ra2
 
 YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
-wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package-v9.tar.xz"
+wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr-${YR_VERSION}/package_$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/expanded_assets/yr-${YR_VERSION} | grep -Eo "/package_.*.tar" | cut -d'_' -f2)"
 
 wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
 
-tar -xf package*.tar.xz -C ra2yr-mp/winedata/yr ; rm package*.tar.xz
+tar -xf package*.tar -C ra2yr-mp/winedata/yr ; rm package*.tar
 
 sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/test5-devel/wine-devel-wow64_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/test5-devel | grep -Eo 'wow64_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-stable | grep -Eo 'stable_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
 chmod +x *.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
 
 cp -r "ra2yr-mp/"* AppDir
 
-chmod +x AppDir/winedata/yr/CnCNetYRLauncher.sh AppDir/winedata/yr/Resources/yr-wine.sh
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh
 
 # NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
@@ -71,9 +71,9 @@ wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-a
 
 YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
-wget -q "https://github.com/mmtrt/cncra2yr_AppImage/releases/download/asset/package-v9.tar.xz"
+wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr-${YR_VERSION}/package_$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/expanded_assets/yr-${YR_VERSION} | grep -Eo "/package_.*.tar" | cut -d'_' -f2)"
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/test5-devel/wine-devel-wow64_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/test5-devel | grep -Eo 'wow64_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-stable | grep -Eo 'stable_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
 chmod +x *.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
 
 # Remove wrapper
@@ -89,9 +89,9 @@ sleep 2 ; pkill winecfg
 
 rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp ; ls -al AppDir/winedata ; ls -al AppDir/winedata/.wine
 
-mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar.xz -C AppDir/winedata/yr ; rm package*.tar.xz
+mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar -C AppDir/winedata/yr ; rm package*.tar
 
-chmod +x AppDir/winedata/yr/CnCNetYRLauncher.sh AppDir/winedata/yr/Resources/yr-wine.sh
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh
 
 sed -i -e 's|progVer=|progVer='"${YR_VERSION}-dotnet_WP"'|g' AppDir/wrapper
 
