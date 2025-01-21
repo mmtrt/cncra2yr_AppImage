@@ -32,9 +32,9 @@ sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-stable | grep -Eo 'stable_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
 chmod +x *.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
 
-cp -r "ra2yr-mp/"* AppDir
+cp -r "ra2yr-mp/"* AppDir ; cp wine-dta.sh AppDir/winedata/yr/
 
-chmod +x AppDir/winedata/yr/YRLauncherUnix.sh
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/yr/wine-dta.sh
 
 # NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
@@ -89,9 +89,9 @@ sleep 2 ; pkill winecfg
 
 rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp ; ls -al AppDir/winedata ; ls -al AppDir/winedata/.wine
 
-mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar -C AppDir/winedata/yr ; rm package*.tar
+mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar -C AppDir/winedata/yr ; rm package*.tar ; cp wine-dta.sh AppDir/winedata/yr/
 
-chmod +x AppDir/winedata/yr/YRLauncherUnix.sh
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/yr/wine-dta.sh
 
 sed -i -e 's|progVer=|progVer='"${YR_VERSION}-dotnet_WP"'|g' AppDir/wrapper
 

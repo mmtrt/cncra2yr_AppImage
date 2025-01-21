@@ -79,7 +79,8 @@ if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; th
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
-#   sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
+  sed -i 's| bin|/bin|' "$progHome"/wine-dta.sh
+  sed -i "s|x.xx|$progVer|" "$progHome"/wine-dta.sh
 
 fi
 
@@ -97,7 +98,8 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
-#   sed -i 's| bin|/bin|' "$progHome"/Resources/yr-wine.sh
+  sed -i 's| bin|/bin|' "$progHome"/wine-dta.sh
+  sed -i "s|x.xx|$progVer|" "$progHome"/wine-dta.sh
 fi
 
 atexit ()
