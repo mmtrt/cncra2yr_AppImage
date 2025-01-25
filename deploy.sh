@@ -27,7 +27,7 @@ wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-a
 
 tar -xf package*.tar -C ra2yr-mp/winedata/yr ; rm package*.tar
 
-sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
+sed -i -e 's|progVer=|progVer='"${YR_VERSION}-dotnet"'|g' ra2yr-mp/wrapper
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-stable | grep -Eo 'stable_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
 chmod +x *.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
