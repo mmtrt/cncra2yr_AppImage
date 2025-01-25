@@ -75,13 +75,12 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
-if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
+cp "$APPDIR"/winedata/wine-dta.sh "$progHome"/
+sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-dta.sh
 
+if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
-  sed -i 's| bin|/bin|' "$progHome"/wine-dta.sh
-  sed -i "s|x.xx|$progVer|" "$progHome"/wine-dta.sh
-
 fi
 
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
@@ -98,8 +97,6 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
-  sed -i 's| bin|/bin|' "$progHome"/wine-dta.sh
-  sed -i "s|x.xx|$progVer|" "$progHome"/wine-dta.sh
 fi
 
 atexit ()
