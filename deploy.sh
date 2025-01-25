@@ -80,9 +80,8 @@ chmod +x *.AppImage ; cp wine-stable.AppImage ra2yr-mp/winedata/
 rm wrapper
 
 # Create WINEPREFIX
-./wine-stable.AppImage winecfg &
-sleep 2 ; pkill winecfg
-./wine-stable.AppImage reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
+./wine-stable.AppImage wineboot -i ; sleep 5
+./wine-stable.AppImage reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin
 
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
