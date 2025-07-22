@@ -14,22 +14,27 @@ wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -
 rm builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
 # Add static appimage runtime
-mkdir -p appimage-build/prime
+mkdir -p appimage-build/prime AppDir/winedata
 wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-x86_64" -O appimage-build/prime/runtime-x86_64
 
-mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
+mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata/yr ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
 
-YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
-wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
-wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
-wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
-wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
+wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr-${YR_VERSION}/package_$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/expanded_assets/yr-${YR_VERSION} | grep -Eo "/package_.*.tar.gz" | cut -d'_' -f2)"
 
-cp -Rp ./*.exe ra2yr-mp/winedata ; cp -Rp ./*.msi ra2yr-mp/winedata
-sed -i -e 's|progVer=|progVer='"$YR_VERSION"'|g' ra2yr-mp/wrapper
+wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
 
-mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
+tar -xf package*.tar.gz -C ra2yr-mp/winedata/yr ; rm package*.tar.gz
+
+sed -i -e 's|progVer=|progVer='"${YR_VERSION}"'|g' ra2yr-mp/wrapper
+
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-devel.AppImage
+chmod +x *.AppImage ; cp wine-devel.AppImage ra2yr-mp/winedata/
+
+cp -r "ra2yr-mp/"* AppDir ; cp wine-dta.sh AppDir/winedata/
+
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/wine-dta.sh
 
 # NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
@@ -41,8 +46,7 @@ mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
 
 cncra2yrswp () {
 
-export WINEDLLOVERRIDES="mshtml="
-export WINEARCH="win32"
+export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX="/home/runner/work/cncra2yr_AppImage/cncra2yr_AppImage/AppDir/winedata/.wine"
 export WINEDEBUG="-all"
 
@@ -58,45 +62,35 @@ wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -
 rm builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
 # Add static appimage runtime
-mkdir -p appimage-build/prime
+mkdir -p appimage-build/prime AppDir/winedata
 wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-x86_64" -O appimage-build/prime/runtime-x86_64
 
 mkdir -p ra2yr-mp/usr/share/icons ra2yr-mp/winedata ; cp cncra2yr.desktop ra2yr-mp ; cp wrapper ra2yr-mp ; cp cncra2yr.png ra2yr-mp/usr/share/icons
 
-YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/yr-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
 
-wget -q "https://downloads.cncnet.org/CnCNet5_YR_Installer.exe"
-wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
-wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
+YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-multi/wine-stable-multi_4.0.4-x86_64.AppImage -O wine-stable.AppImage
-chmod +x *.AppImage
+wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr-${YR_VERSION}/package_$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/expanded_assets/yr-${YR_VERSION} | grep -Eo "/package_.*.tar.gz" | cut -d'_' -f2)"
 
-# Create winetricks & wine cache
-mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,ahk,xna40} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-devel.AppImage
+chmod +x *.AppImage ; cp wine-devel.AppImage ra2yr-mp/winedata/
+
+# Remove wrapper
 rm wrapper
 
 # Create WINEPREFIX
-mkdir -p "$WINEPREFIX/drive_c/windows/assembly"
-./wine-stable.AppImage winetricks -q xna40 vcrun2010; sleep 5
-
-# Create empty files
-mkdir -p "$WINEPREFIX/drive_c/Westwood/RA2" ; ( cd "$WINEPREFIX/drive_c/Westwood/RA2" || exit ; touch BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix )
-
-# Install game
-( ./wine-stable.AppImage CnCNet5_YR_Installer.exe /silent ; sleep 5 )
+./wine-devel.AppImage wineboot -i ; sleep 5
+./wine-devel.AppImage reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin
 
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
-( cd "$WINEPREFIX/drive_c/Westwood/RA2" ; rm BINKW32.dll BLOWFISH.dll ra2.mix ra2md.mix language.mix langmd.mix ) || true
 
-rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp
+rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp ; ls -al AppDir/winedata ; ls -al AppDir/winedata/.wine
 
-mkdir -p AppDir/winedata ; cp -r "ra2yr-mp/"* AppDir
+mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar.gz -C AppDir/winedata/yr ; rm package*.tar.gz ; cp wine-dta.sh AppDir/winedata/
 
-# NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
-
-# sed -i "s|520|$NVDV|" cncra2yr.yml
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/wine-dta.sh
 
 sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 

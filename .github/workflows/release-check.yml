@@ -6,7 +6,7 @@ on:
 
 jobs:
   new-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -14,7 +14,7 @@ jobs:
         token: ${{ secrets.PATn }}
     - name: get-latest-version
       run: |
-        VERSION="$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')"
+        VERSION="$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')"
         last=$(tail -n1 .build | awk '{print $4}')
 
         if [ "$last" != "$VERSION" ]; then
