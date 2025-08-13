@@ -18,7 +18,7 @@ AppDir:
     exec_args: $APPDIR/wrapper $@
 
   apt:
-    arch: [amd64, i386]
+    arch: [amd64]
     sources:
       - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse'
       - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse'
@@ -88,7 +88,7 @@ AppDir:
       - usr/share/zsh
 
 AppImage:
-  update-information: gh-releases-zsync|mmtrt|cncra2yr_AppImage|dotnet|cncra2yr*.AppImage.zsync
+  update-information: gh-releases-zsync|mmtrt|cncra2yr_AppImage|test|cncra2yr*.AppImage.zsync
   #sign-key: None
   arch: x86_64
 
