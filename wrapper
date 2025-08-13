@@ -22,7 +22,7 @@ else
 fi
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
-export WINELOADER=${WINELOADER:-"$APPDIR/winedata/./wine-stable.AppImage"}
+export WINELOADER=${WINELOADER:-"$APPDIR/winedata/./wine-devel.AppImage"}
 
 if [ ! -d "$progHome" ];then
   mkdir -p "$progHome" || exit 1
