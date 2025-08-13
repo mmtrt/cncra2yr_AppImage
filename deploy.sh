@@ -41,15 +41,26 @@ chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/wine-dta.sh
 rm *.AppImage
 
 export ARCH="$(uname -m)"
+export APPIMAGE_EXTRACT_AND_RUN=1
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|test|*$ARCH.AppImage.zsync"
 VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
-wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
-wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
+wget -q --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
+wget -q --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
 chmod +x ./uruntime*
+
+# Keep the mount point (speeds up launch time)
+sed -i 's|URUNTIME_MOUNT=[0-9]|URUNTIME_MOUNT=0|' ./uruntime-lite
+
+# Add udpate info to runtime
+echo "Adding update information \"$UPINFO\" to runtime..."
 ./uruntime-lite --appimage-addupdinfo "$UPINFO"
+
+echo "Generating AppImage..."
 ./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./cncra2yr-"$VERSION"-"$ARCH".AppImage
+
+echo "Generating zsync file..."
 zsyncmake *.AppImage -u *.AppImage
 ls -al
 }
@@ -107,15 +118,25 @@ sed -i 's/test|/test-wp|/' cncra2yr.yml
 rm *.AppImage
 
 export ARCH="$(uname -m)"
+export APPIMAGE_EXTRACT_AND_RUN=1
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|test-wp|*$ARCH.AppImage.zsync"
 VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
-wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
-wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
+wget -q --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
+wget -q --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
 chmod +x ./uruntime*
+
+# Keep the mount point (speeds up launch time)
+sed -i 's|URUNTIME_MOUNT=[0-9]|URUNTIME_MOUNT=0|' ./uruntime-lite
+
+echo "Adding update information \"$UPINFO\" to runtime..."
 ./uruntime-lite --appimage-addupdinfo "$UPINFO"
+
+echo "Generating AppImage..."
 ./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./cncra2yr-"$VERSION"_WP-"$ARCH".AppImage
+
+echo "Generating zsync file..."
 zsyncmake *.AppImage -u *.AppImage
 ls -al
 
