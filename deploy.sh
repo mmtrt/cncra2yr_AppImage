@@ -36,8 +36,22 @@ chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/wine-dta.sh
 
 # sed -i "s|520|$NVDV|" cncra2yr.yml
 
-./squashfs-root/AppRun --recipe cncra2yr.yml
+./squashfs-root/AppRun --skip-appimage --recipe cncra2yr.yml
 
+rm *.AppImage
+
+export ARCH="$(uname -m)"
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|test|*$ARCH.AppImage.zsync"
+VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
+URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
+wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
+wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
+chmod +x ./uruntime*
+./uruntime-lite --appimage-addupdinfo "$UPINFO"
+./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./cncra2yr-"$VERSION"-"$ARCH".AppImage
+zsyncmake *.AppImage -u *.AppImage
+ls -al
 }
 
 cncra2yrswp () {
@@ -88,7 +102,22 @@ sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 
 sed -i 's/test|/test-wp|/' cncra2yr.yml
 
-./squashfs-root/AppRun --recipe cncra2yr.yml
+./squashfs-root/AppRun --skip-appimage --recipe cncra2yr.yml
+
+rm *.AppImage
+
+export ARCH="$(uname -m)"
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|test-wp|*$ARCH.AppImage.zsync"
+VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
+URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
+wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
+wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
+chmod +x ./uruntime*
+./uruntime-lite --appimage-addupdinfo "$UPINFO"
+./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./cncra2yr-"$VERSION"_WP-"$ARCH".AppImage
+zsyncmake *.AppImage -u *.AppImage
+ls -al
 
 }
 
