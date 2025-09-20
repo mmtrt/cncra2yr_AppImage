@@ -117,6 +117,16 @@ for i; do # for i = for i in "$@"
     fi
 done
 
+if [ -e "$progHome"/version ] && [ -e "$APPDIR"/winedata/yr/version ]; then
+VERSION="$(cat $APPDIR/winedata/yr/version | grep Version= | cut -d'=' -f2)"
+last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
+ if [ "$last" != "$VERSION" ]; then
+  echo updating to "$VERSION"
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+ fi
+fi
+
 # if [ -f "$progHome/version_u" ]; then
 #
 # InVer=$(cat $progHome/version | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
