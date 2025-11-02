@@ -36,8 +36,20 @@ chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/wine-dta.sh
 
 # sed -i "s|520|$NVDV|" cncra2yr.yml
 
-./squashfs-root/AppRun --recipe cncra2yr.yml
+./squashfs-root/AppRun --skip-appimage --recipe cncra2yr.yml
 
+rm *.AppImage
+
+export ARCH="$(uname -m)"
+export APPIMAGE_EXTRACT_AND_RUN=1
+export URUNTIME_PRELOAD=1
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|stable|*$ARCH.AppImage.zsync"
+VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+
+echo "Generating AppImage..."
+appimagetool --no-appstream -u "$UPINFO" AppDir cncra2yr-"$VERSION"-"$ARCH".AppImage
+
+ls -al
 }
 
 cncra2yrswp () {
@@ -88,7 +100,20 @@ sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 
 sed -i 's/stable|/stable-wp|/' cncra2yr.yml
 
-./squashfs-root/AppRun --recipe cncra2yr.yml
+./squashfs-root/AppRun --skip-appimage --recipe cncra2yr.yml
+
+rm *.AppImage
+
+export ARCH="$(uname -m)"
+export APPIMAGE_EXTRACT_AND_RUN=1
+export URUNTIME_PRELOAD=1
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|stable-wp|*$ARCH.AppImage.zsync"
+VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
+
+echo "Generating AppImage..."
+appimagetool --no-appstream -u "$UPINFO" AppDir cncra2yr-"$VERSION"_WP-"$ARCH".AppImage
+
+ls -al
 
 }
 
