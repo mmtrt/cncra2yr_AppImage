@@ -5,7 +5,7 @@ cncra2yrs () {
 # Download icon:
 wget -q https://github.com/mmtrt/cncra2yr/raw/master/snap/gui/cncra2yr.png
 
-wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/Continuous/appimage-builder-1.1.1.dev32+g2709a3b-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
 
 # add custom mksquashfs
 wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
@@ -58,7 +58,7 @@ export WINEDEBUG="-all"
 # Download icon:
 wget -q https://github.com/mmtrt/cncra2yr/raw/master/snap/gui/cncra2yr.png
 
-wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/Continuous/appimage-builder-1.1.1.dev32+g2709a3b-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
 
 # add custom mksquashfs
 wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
@@ -85,7 +85,7 @@ rm wrapper
 ./wine-devel.AppImage reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin
 
 # Removing any existing user data
-( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
+( cd "$WINEPREFIX" ; rm -rf dosdevices ; cd "drive_c" ; rm -rf users ) || true
 
 rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp ; ls -al AppDir/winedata ; ls -al AppDir/winedata/.wine
 
