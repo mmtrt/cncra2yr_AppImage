@@ -77,8 +77,9 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
-cp "$APPDIR"/winedata/wine-dta.sh "$progHome"/
-sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-dta.sh
+cp "$APPDIR"/winedata/CnCNetQM.sh "$progHome"/Resources/Compatibility/Unix/
+cp "$APPDIR"/winedata/wine-game.sh "$progHome"/Resources/Compatibility/Unix/
+sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
 
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
@@ -161,8 +162,8 @@ case "$1" in
   "winetricks")
     winetricks "$2" "$3"
     ;;
-  "gamemd-spawn.exe")
-    "$WINELOADER" "$1" "$2"
+  "Syringe.exe")
+    "$WINELOADER" "$1" -i=Ares.dll -i=CnCNet-Spawner.dll -i=Phobos.dll \ "gamemd-spawn.exe" -SPAWN -LOG -CD -RA2ModeSaveID=0x8d113b94
     ;;
   "clientogl.dll")
     "$APPDIR"/winedata/./dotnet "${args[@]}"

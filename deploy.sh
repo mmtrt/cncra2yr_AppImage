@@ -25,9 +25,9 @@ tar -xf package*.tar.gz -C ra2yr-mp/winedata/yr ; rm package*.tar.gz
 
 sed -i -e 's|progVer=|progVer='"${YR_VERSION}"'|g' ra2yr-mp/wrapper
 
-cp -r "ra2yr-mp/"* AppDir ; cp wine-dta.sh AppDir/winedata/
+cp -r "ra2yr-mp/"* AppDir ; cp wine-game.sh AppDir/winedata/ ; cp CnCNetQM.sh AppDir/winedata/
 
-chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/wine-dta.sh
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/*.sh
 
 # NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
@@ -89,9 +89,10 @@ rm wrapper
 
 rm ./*.AppImage ; echo "disabled" > $WINEPREFIX/.update-timestamp ; ls -al AppDir/winedata ; ls -al AppDir/winedata/.wine
 
-mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar.gz -C AppDir/winedata/yr ; rm package*.tar.gz ; cp wine-dta.sh AppDir/winedata/
+mkdir -p AppDir/winedata/yr ; cp -r "ra2yr-mp/"* AppDir ; tar -xf package*.tar.gz -C AppDir/winedata/yr ; rm package*.tar.gz
+cp wine-game.sh AppDir/winedata/ ; cp CnCNetQM.sh AppDir/winedata/
 
-chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/wine-dta.sh
+chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/*.sh
 
 sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 
