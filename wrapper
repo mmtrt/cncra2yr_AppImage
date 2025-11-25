@@ -18,11 +18,13 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
 else
   progRealPath="$APPDIR/winedata/yr"
   # WINE env
+  export WINE="$APPDIR/opt/wine-devel/bin/wine"
   export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+  export WINESERVER="$APPDIR/opt/wine-devel/bin/wineserver"
 fi
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
-export WINELOADER=${WINELOADER:-"$APPDIR/winedata/./wine-devel.AppImage"}
+export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-devel/bin/wine"}
 
 if [ ! -d "$progHome" ];then
   mkdir -p "$progHome" || exit 1
@@ -75,8 +77,9 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
-cp "$APPDIR"/winedata/wine-dta.sh "$progHome"/
-sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-dta.sh
+cp "$APPDIR"/winedata/CnCNetQM.sh "$progHome"/Resources/Compatibility/Unix/
+cp "$APPDIR"/winedata/wine-game.sh "$progHome"/Resources/Compatibility/Unix/
+sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
 
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
@@ -117,6 +120,16 @@ for i; do # for i = for i in "$@"
     fi
 done
 
+if [ -e "$progHome"/version ] && [ -e "$APPDIR"/winedata/yr/version ]; then
+VERSION="$(cat $APPDIR/winedata/yr/version | grep Version= | cut -d'=' -f2)"
+last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
+ if [ "$last" != "$VERSION" ]; then
+  echo updating to "$VERSION"
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+ fi
+fi
+
 # if [ -f "$progHome/version_u" ]; then
 #
 # InVer=$(cat $progHome/version | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
@@ -149,8 +162,8 @@ case "$1" in
   "winetricks")
     winetricks "$2" "$3"
     ;;
-  "gamemd-spawn.exe")
-    "$WINELOADER" "$1" "$2"
+  "Syringe.exe")
+    "$WINELOADER" "$1" -i=Ares.dll -i=CnCNet-Spawner.dll -i=Phobos.dll \ "gamemd-spawn.exe" -SPAWN -LOG -CD -RA2ModeSaveID=0x8d113b94
     ;;
   "clientogl.dll")
     "$APPDIR"/winedata/./dotnet "${args[@]}"
