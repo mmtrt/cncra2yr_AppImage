@@ -77,7 +77,7 @@ YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releas
 
 wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr-${YR_VERSION}/package_$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/expanded_assets/yr-${YR_VERSION} | grep -Eo "/package_.*.tar.gz" | cut -d'_' -f2)"
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/test6/wine-devel_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/test6 | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-devel.AppImage
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-devel.AppImage
 chmod +x *.AppImage ; cp wine-devel.AppImage ra2yr-mp/winedata/
 
 # Remove wrapper
