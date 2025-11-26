@@ -18,13 +18,13 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
 else
   progRealPath="$APPDIR/winedata/yr"
   # WINE env
+  export WINE="$APPDIR/opt/wine-devel/bin/wine"
   export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+  export WINESERVER="$APPDIR/opt/wine-devel/bin/wineserver"
 fi
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
-export WINE="$APPDIR/usr/bin/wine"
-export WINELOADER="$APPDIR/usr/bin/wine"
-export WINESERVER="$APPDIR/usr/bin/wineserver"
+export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-devel/bin/wine"}
 
 if [ ! -d "$progHome" ];then
   mkdir -p "$progHome" || exit 1

@@ -7,7 +7,6 @@ AppDir:
   path: ./AppDir
   runtime:
       preserve:
-          - opt/wine-devel
           - winedata
 
   app_info:
@@ -46,8 +45,6 @@ AppDir:
 
      wget -q "https://github.com/mmtrt/Wine-Builds/releases/download/latest/wine-${WINE_VER}-amd64.tar.xz"
      mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; mv wine-* wine-devel)
-
-     (cd AppDir/usr/bin; ln -s "../../opt/wine-devel/bin/"* .)
 
      # Cleanup
      rm -rf AppDir/usr/share/{applications,man,doc}
