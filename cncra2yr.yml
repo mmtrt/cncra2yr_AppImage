@@ -27,7 +27,6 @@ AppDir:
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x871920D1991BC93C'
 
     include:
-      - libc6
       - bash
       - dash
       - unionfs-fuse
