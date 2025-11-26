@@ -37,9 +37,6 @@ chmod +x AppDir/winedata/yr/YRLauncherUnix.sh AppDir/winedata/*.sh
 
 ./squashfs-root/AppRun --skip-appimage --recipe cncra2yr.yml
 
-find ${GITHUB_WORKSPACE}/AppDir/runtime/compat/lib/x86_64-linux-gnu/ -iname 'libz**' | xargs -i -t -exec cp {} ${GITHUB_WORKSPACE}/AppDir/usr/lib/x86_64-linux-gnu/
-find ${GITHUB_WORKSPACE}/AppDir/runtime/compat/usr/lib/x86_64-linux-gnu/ -iname 'libstdc**' | xargs -i -t -exec cp {} ${GITHUB_WORKSPACE}/AppDir/usr/lib/x86_64-linux-gnu/
-
 rm *.AppImage
 
 export ARCH="$(uname -m)"
@@ -106,9 +103,6 @@ sed -i -e 's|progVer=|progVer='"${YR_VERSION}_WP"'|g' AppDir/wrapper
 sed -i 's/test|/test-wp|/' cncra2yr.yml
 
 ./squashfs-root/AppRun --skip-appimage --recipe cncra2yr.yml
-
-find ${GITHUB_WORKSPACE}/AppDir/runtime/compat/lib/x86_64-linux-gnu/ -iname 'libz**' | xargs -i -t -exec cp {} ${GITHUB_WORKSPACE}/AppDir/usr/lib/x86_64-linux-gnu/
-find ${GITHUB_WORKSPACE}/AppDir/runtime/compat/usr/lib/x86_64-linux-gnu/ -iname 'libstdc**' | xargs -i -t -exec cp {} ${GITHUB_WORKSPACE}/AppDir/usr/lib/x86_64-linux-gnu/
 
 export ARCH="$(uname -m)"
 export APPIMAGE_EXTRACT_AND_RUN=1
