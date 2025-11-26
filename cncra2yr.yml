@@ -7,6 +7,7 @@ AppDir:
   path: ./AppDir
   runtime:
       preserve:
+          - opt/wine-devel
           - winedata
 
   app_info:
@@ -26,6 +27,7 @@ AppDir:
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x871920D1991BC93C'
 
     include:
+      - libc6
       - bash
       - dash
       - unionfs-fuse
