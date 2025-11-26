@@ -36,6 +36,12 @@ AppDir:
       - var
       - etc
       - usr/sbin
+      - usr/share/doc
+      - usr/share/info
+      - usr/share/initramfs-tools
+      - usr/share/lintian
+      - usr/share/man
+      - usr/share/menu
 
   after_runtime:
     # this is executed after the packages and files are added
@@ -47,7 +53,6 @@ AppDir:
      mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; mv wine-* wine-devel)
 
      # Cleanup
-     rm -rf AppDir/usr/share/{applications,man,doc}
      rm -rf AppDir/opt/wine-devel/include
      rm -rf AppDir/opt/wine-devel/share/{applications,man,doc}
      rm -rf AppDir/opt/wine-devel/lib/wine/i386-windows/*.a
