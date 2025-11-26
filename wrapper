@@ -77,9 +77,9 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
-cp "$APPDIR"/winedata/CnCNetQM.sh "$progHome"/Resources/Compatibility/Unix/
-cp "$APPDIR"/winedata/wine-game.sh "$progHome"/Resources/Compatibility/Unix/
+cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
 sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
+chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
@@ -126,7 +126,9 @@ last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
  if [ "$last" != "$VERSION" ]; then
   echo updating to "$VERSION"
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
  fi
 fi
 
