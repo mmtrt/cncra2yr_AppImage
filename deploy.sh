@@ -21,13 +21,7 @@ wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr
 
 wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O temp/dotnet ; chmod +x temp/dotnet
 
-( cd temp ; ./dotnet --appimage-extract ) || true
-
-ls -al temp/ ; ls -al temp/AppDir/usr/share/dotnet
-
-cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/
-
-( cd AppDir/usr/bin ; ln -s ../../usr/share/dotnet/dotnet . ) || true
+( cd temp ; ./dotnet --appimage-extract ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
 
 tar -xf package*.tar.gz -C ra2yr-mp/winedata/yr ; rm package*.tar.gz ; rm -rf temp
 
@@ -81,13 +75,7 @@ mkdir -p temp AppDir/winedata AppDir/usr/share AppDir/bin ra2yr-mp/usr/share/ico
 
 wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O temp/dotnet ; chmod +x temp/dotnet
 
-( cd temp ; ./dotnet --appimage-extract ) || true
-
-ls -al temp/ ; ls -al temp/AppDir/usr/share/dotnet
-
-cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/
-
-( cd AppDir/usr/bin ; ln -s ../../usr/share/dotnet/dotnet . ) || true
+( cd temp ; ./dotnet --appimage-extract ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
 
 YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
