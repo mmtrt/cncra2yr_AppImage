@@ -7,9 +7,6 @@ wget -q https://github.com/mmtrt/cncra2yr/raw/master/snap/gui/cncra2yr.png
 
 wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
 
-# add custom mksquashfs
-wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
-
 # force zstd format in appimagebuilder for appimages
 rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
@@ -21,7 +18,7 @@ wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr
 
 wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O temp/dotnet ; chmod +x temp/dotnet
 
-( cd temp ; ./dotnet --appimage-extract ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
+( cd temp ; ./dotnet --appimage-extract &>/dev/null ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
 
 tar -xf package*.tar.gz -C ra2yr-mp/winedata/yr ; rm package*.tar.gz ; rm -rf temp
 
@@ -61,9 +58,6 @@ wget -q https://github.com/mmtrt/cncra2yr/raw/master/snap/gui/cncra2yr.png
 
 wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
 
-# add custom mksquashfs
-wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
-
 # force zstd format in appimagebuilder for appimages
 rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
@@ -71,7 +65,7 @@ mkdir -p temp AppDir/winedata AppDir/usr/share AppDir/bin ra2yr-mp/usr/share/ico
 
 wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O temp/dotnet ; chmod +x temp/dotnet
 
-( cd temp ; ./dotnet --appimage-extract ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
+( cd temp ; ./dotnet --appimage-extract &>/dev/null ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
 
 YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/latest | grep -Eo "/yr-.*" | head -1 | sed 's|-| |' | cut -d'"' -f1 | awk '{print $2}')
 
