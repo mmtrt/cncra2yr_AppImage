@@ -77,13 +77,12 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
-cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
-sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
-chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
-
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
+  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
