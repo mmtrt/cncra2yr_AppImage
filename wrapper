@@ -166,7 +166,7 @@ case "$1" in
     "$WINELOADER" "$1" -i=Ares.dll -i=CnCNet-Spawner.dll -i=Phobos.dll \ "gamemd-spawn.exe" -SPAWN -LOG -CD -RA2ModeSaveID=0x8d113b94
     ;;
   "clientogl.dll")
-    "$APPDIR"/winedata/./dotnet "${args[@]}"
+    "$APPDIR"/usr/bin/dotnet "${args[@]}"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
@@ -179,6 +179,6 @@ case "$1" in
     "$WINELOADER" "$@"
     ;;
   *)
-    "$APPDIR"/winedata/./dotnet "$progBin" "${args[@]}"
+    "$APPDIR"/usr/bin/dotnet "$progBin" "${args[@]}"
     ;;
 esac
