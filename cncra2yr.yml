@@ -39,7 +39,7 @@ AppDir:
       - etc
       - usr/sbin
 
-  after_bundle:
+  after_runtime:
     # this is executed after the packages and files are added
     - |
 
