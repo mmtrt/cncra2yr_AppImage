@@ -32,6 +32,13 @@ AppDir:
       - dash
       - unionfs-fuse
 
+  files:
+    exclude:
+      - sbin
+      - var
+      - etc
+      - usr/sbin
+
   after_bundle:
     # this is executed after the packages and files are added
     - |
@@ -42,6 +49,14 @@ AppDir:
      mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; mv wine-* wine-devel)
 
      (cd AppDir/usr/bin; ln -s "../../opt/wine-devel/bin/"* .)
+
+     # Cleanup
+     rm -rf AppDir/usr/share/{man,doc}
+     rm -rf AppDir/opt/wine-devel/include
+     rm -rf AppDir/opt/wine-devel/share/{applications,man,doc}
+     rm -rf AppDir/opt/wine-devel/lib/wine/i386-windows/*.a
+     rm -rf AppDir/opt/wine-devel/lib/wine/x86_64-unix/*.a
+     rm -rf AppDir/opt/wine-devel/lib/wine/x86_64-windows/*.a
 
      # Link dotnet exec
      (cd AppDir/usr/bin; ln -s "../../usr/share/dotnet/dotnet" .)
