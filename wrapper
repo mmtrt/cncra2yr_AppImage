@@ -77,13 +77,12 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
-cp "$APPDIR"/winedata/CnCNetQM.sh "$progHome"/Resources/Compatibility/Unix/
-cp "$APPDIR"/winedata/wine-game.sh "$progHome"/Resources/Compatibility/Unix/
-sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
-
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
+  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
@@ -126,7 +125,9 @@ last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
  if [ "$last" != "$VERSION" ]; then
   echo updating to "$VERSION"
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
  fi
 fi
 
@@ -166,7 +167,7 @@ case "$1" in
     "$WINELOADER" "$1" -i=Ares.dll -i=CnCNet-Spawner.dll -i=Phobos.dll \ "gamemd-spawn.exe" -SPAWN -LOG -CD -RA2ModeSaveID=0x8d113b94
     ;;
   "clientogl.dll")
-    "$APPDIR"/winedata/./dotnet "${args[@]}"
+    "$APPDIR"/usr/bin/dotnet "${args[@]}"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
@@ -179,6 +180,6 @@ case "$1" in
     "$WINELOADER" "$@"
     ;;
   *)
-    "$APPDIR"/winedata/./dotnet "$progBin" "${args[@]}"
+    "$APPDIR"/usr/bin/dotnet "$progBin" "${args[@]}"
     ;;
 esac
