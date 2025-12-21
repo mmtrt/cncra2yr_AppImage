@@ -74,7 +74,13 @@ YR_VERSION=$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releas
 
 wget -q "https://github.com/CnCNet/cncnet-yr-client-package/releases/download/yr-${YR_VERSION}/package_$(wget -qO- https://github.com/CnCNet/cncnet-yr-client-package/releases/expanded_assets/yr-${YR_VERSION} | grep -Eo "/package_.*.tar.gz" | cut -d'_' -f2)"
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-devel.AppImage
+if [ $(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | head -1 | grep -c rc) -gt 0 ]; then
+ WINE_VERSION="$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1,2 | head -1)"
+else
+ WINE_VERSION="$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)"
+fi
+
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_${WINE_VERSION}-x86_64.AppImage -O wine-devel.AppImage
 chmod +x *.AppImage
 
 # Remove wrapper

@@ -91,7 +91,11 @@ AppDir:
     # this is executed after the packages and files are added
     - |
 
-     WINE_VER="$(wget -qO- https://github.com/mmtrt/Wine-Builds/releases/expanded_assets/latest | grep -Eo '/wine-[0-9].*xz"' | cut -d'-' -f2 | head -1)"
+     if [ $(wget -qO- https://github.com/mmtrt/Wine-Builds/releases/expanded_assets/latest | grep -Eo '/wine-[0-9].*xz"' | head -1 | grep -c rc) -gt 0 ]; then
+      WINE_VER="$(wget -qO- https://github.com/mmtrt/Wine-Builds/releases/expanded_assets/latest | grep -Eo '/wine-[0-9].*xz"' | cut -d'-' -f2,3 | head -1)"
+     else
+      WINE_VER="$(wget -qO- https://github.com/mmtrt/Wine-Builds/releases/expanded_assets/latest | grep -Eo '/wine-[0-9].*xz"' | cut -d'-' -f2 | head -1)"
+     fi
 
      wget -q "https://github.com/mmtrt/Wine-Builds/releases/download/latest/wine-${WINE_VER}-amd64.tar.xz"
      mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; mv wine-* wine-devel)
