@@ -98,7 +98,10 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
   sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
+  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
+  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
 atexit ()
