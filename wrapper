@@ -79,9 +79,6 @@ fi
 
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
-  sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
-  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
   chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
@@ -98,9 +95,6 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
-  sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
-  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
   chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
@@ -128,35 +122,9 @@ last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
  if [ "$last" != "$VERSION" ]; then
   echo updating to "$VERSION"
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/Resources/Compatibility/Unix/
-  sed -i 's| bin|/bin|' "$progHome"/YRLauncherUnix.sh
-  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/Resources/Compatibility/Unix/*.sh
   chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
  fi
 fi
-
-# if [ -f "$progHome/version_u" ]; then
-#
-# InVer=$(cat $progHome/version | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
-# UpVer=$(cat $progHome/version_u | cut -d'=' -f2 | sed 1d | head -1 | cut -d'-' -f1)
-#
-# if [[ $UpVer < $InVer ]]; then
-#   if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]]; then
-#     sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
-#   fi
-# else
-#   if [[ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 1 ]]; then
-#     sed -i "s|$(grep -Eo "/.*.AppImage" "$progHome"/Resources/yr-wine.sh)|wine|" "$progHome"/Resources/yr-wine.sh
-#   fi
-# fi
-#
-# fi
-#
-# if [ ! -f "$progHome/version_u" ]; then
-#  if [ $(grep -c AppImage "$progHome"/Resources/yr-wine.sh) = 0 ]; then
-#     sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/Resources/yr-wine.sh
-#  fi
-# fi
 
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
@@ -166,12 +134,6 @@ case "$1" in
     ;;
   "winetricks")
     winetricks "$2" "$3"
-    ;;
-  "Syringe.exe")
-    "$WINELOADER" "$1" -i=Ares.dll -i=CnCNet-Spawner.dll -i=Phobos.dll \ "gamemd-spawn.exe" -SPAWN -LOG -CD -RA2ModeSaveID=0x8d113b94
-    ;;
-  "clientogl.dll")
-    "$APPDIR"/usr/bin/dotnet "${args[@]}"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
