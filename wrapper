@@ -1,4 +1,6 @@
+# ---------------------------------------------------------------------------
 # APP env
+# ---------------------------------------------------------------------------
 progName="cncra2yr"
 progArch="-x86_64"
 progVer=
@@ -7,51 +9,78 @@ progUGL="$progHome/Resources/BinariesNET8/UniversalGL"
 progBin="$progUGL/clientogl.dll"
 progEXE="gamemd-spawn.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
+progRealPath="$APPDIR/winedata/yr"
+
+# Fall back to $0 if $APPIMAGE isn't exported (e.g. running the
+# extracted AppDir directly). Used below instead of manually rebuilding
+# the AppImage's filename.
+APPIMAGE="${APPIMAGE:-$0}"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-  progRealPath="$APPDIR/winedata/yr"
   # env used by unionfs-fuse
   # WINEPREFIX in the AppDir
   RO_WINEPREFIX="$APPDIR/winedata/.wine"
   RW_WINEPREFIX="$progHome/.wine"
-  MNT_WINEPREFIX=/tmp/."${progName}".unionfs
+  # Namespace the unionfs mountpoint by $UID so two users on
+  # the same machine don't collide on the same /tmp path.
+  MNT_WINEPREFIX="/tmp/.${progName}-${UID}.unionfs"
 else
-  progRealPath="$APPDIR/winedata/yr"
   # WINE env
-  export WINE="$APPDIR/opt/wine-devel/bin/wine"
   export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
-  export WINESERVER="$APPDIR/opt/wine-devel/bin/wineserver"
 fi
+export WINE="$APPDIR/opt/wine-devel/bin/wine"
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
 export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-devel/bin/wine"}
+export WINESERVER="$APPDIR/opt/wine-devel/bin/wineserver"
 
-if [ ! -d "$progHome" ];then
-  mkdir -p "$progHome" || exit 1
-fi
+mkdir -p "$progHome" || exit 1
+
+# ---------------------------------------------------------------------------
+# The copy-game-files-and-patch-scripts sequence below was
+# duplicated three times (first-run install, fresh-WINEPREFIX install, and
+# version-update). Factored into one function so a fix only has to be made
+# once.
+# ---------------------------------------------------------------------------
+sync_game_files() {
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|;s|^\${WINE:=wine} |"$APPIMAGE" |' "$progHome"/Resources/Compatibility/Unix/*.sh
+  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
+}
 
 dkico() {
-if [[ ! -f $progIcoD ]]; then
+  if [[ ! -f "$progIcoD" ]]; then
 
-cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
-mkdir -p "$HOME/.local/share/applications"
-DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
+    cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
+    mkdir -p "$HOME/.local/share/applications"
+    DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
 
-{
-echo "[Desktop Entry]"
-echo "Type=Application"
-echo "Encoding=UTF-8"
-echo "Name=$progName"
-echo "Comment="
-echo "Icon=$progName"
-echo "TryExec=${OWD}/${progName}_${progArch}.AppImage"
-echo "Exec=${OWD}/${progName}_${progArch}.AppImage %F"
-echo "Categories=Game;"
-echo "Terminal=false"
-echo "StartupWMClass=YRLauncherUnix.sh,gamemd-spawn.exe"
-echo "Keywords=game"
-} >> "$DesktopFilePath"
-fi
+    # BUG FIX: TryExec/Exec previously rebuilt the AppImage filename as
+    # "${OWD}/${progName}_${progArch}.AppImage". Two problems with that:
+    #  1. $OWD is the directory the AppImage was *launched from*, not
+    #     where the .AppImage file actually lives — wrong unless you
+    #     happen to run it from that exact directory.
+    #  2. The extra underscore between $progName and $progArch produced
+    #     "cncra2yr_-x86_64.AppImage" instead of the real
+    #     "cncra2yr-x86_64.AppImage" (progArch already includes its own
+    #     leading dash).
+    # Using $APPIMAGE sidesteps both problems entirely — it's the actual
+    # absolute path of the running AppImage, provided by the runtime.
+    {
+      echo "[Desktop Entry]"
+      echo "Type=Application"
+      echo "Encoding=UTF-8"
+      echo "Name=$progName"
+      echo "Comment="
+      echo "Icon=$progName"
+      echo "TryExec=$APPIMAGE"
+      echo "Exec=$APPIMAGE %F"
+      echo "Categories=Game;"
+      echo "Terminal=false"
+      echo "StartupWMClass=YRLauncherUnix.sh,gamemd-spawn.exe"
+      echo "Keywords=game"
+    } >> "$DesktopFilePath"
+  fi
 }
 
 msg="Note: This AppImage does not include the actual game so you have to buy or use your bought copy game files in order play.\n
@@ -80,70 +109,114 @@ fi
 wine_game="$progHome/Resources/Compatibility/Unix/wine-game.sh"
 
 if [[ -f "$wine_game" ]] && [[ $(grep -c APPIMAGE "$wine_game") -eq 0 ]]; then
-  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
+  sed -i 's| bin|/bin|;s|^\${WINE:=wine} |"$APPIMAGE" |' "$progHome"/Resources/Compatibility/Unix/*.sh
   chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
-if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
-  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
-  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
+if [[ ! -f "$progHome/YRLauncherUnix.sh" ]] && [[ -d "$APPDIR/winedata/.wine" ]]; then
+  sync_game_files
 fi
 
+# ---------------------------------------------------------------------------
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
-if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
+# ---------------------------------------------------------------------------
+if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ]; then
   mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX"
-  if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
-    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+  if [ ! -e "$MNT_WINEPREFIX/drive_c" ]; then
+    unionfs-fuse -o use_ino,uid="$UID" -ocow "$RW_WINEPREFIX"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
     trap atexit EXIT
   fi
   export WINEPREFIX="$MNT_WINEPREFIX"
 
 elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
-  "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
-  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
-  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
+  "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin
+  sleep 5
+  sync_game_files
 fi
 
-atexit ()
-{
-  while pgrep -f "clientogl" ; do sleep 1 ; done
-  kill $(ps -ef | grep $progName.unionfs | awk '{print $2}' | head -1)
+atexit() {
+  while pgrep -f "clientogl" >/dev/null; do sleep 1; done
+  # `ps -ef | grep $progName.unionfs | ... | head -1` can match
+  # the grep invocation itself (its command line literally contains the
+  # search string), risking killing grep instead of unionfs-fuse.
+  # pkill -f doesn't match its own process.
+  pkill -f "${progName}.unionfs"
   sleep 1
-  rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
+  rm -r "$MNT_WINEPREFIX"
 }
 
+# ---------------------------------------------------------------------------
 # Passing args to wine apps
+# ---------------------------------------------------------------------------
+args=()
 for i; do # for i = for i in "$@"
-    # Add path in Wine form (e.g. "z:/home/user/Desktop/lol.xyz")
-    if [[ -f /${i#?:} ]]; then 
-        args+=("z:${i#?:}")   # When opened through .desktop or Wine path (e.g. z:/*)
-    elif [[ "${i:0:1}" = "-" ]]; then
-        args+=("${i/#-//}")
-    fi
+  # Add path in Wine form (e.g. "z:/home/user/Desktop/lol.xyz")
+  if [[ -f "/${i#?:}" ]]; then
+    args+=("z:${i#?:}")   # When opened through .desktop or Wine path (e.g. z:/*)
+  elif [[ "${i:0:1}" = "-" ]]; then
+    args+=("${i/#-//}")
+  else
+    # Any argument that was neither an existing file nor a
+    # leading-dash flag was previously dropped silently — it matched
+    # neither branch and never got appended to args[]. This could lose
+    # legitimate positional arguments (e.g. plain numeric spawn IDs,
+    # the literal "clientogl.dll" token itself, etc.). Pass it through
+    # unmodified instead of discarding it.
+    args+=("$i")
+  fi
 done
 
-if [ -e "$progHome"/version ] && [ -e "$APPDIR"/winedata/yr/version ]; then
-VERSION="$(cat $APPDIR/winedata/yr/version | grep Version= | cut -d'=' -f2)"
-last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
- if [ "$last" != "$VERSION" ]; then
-  echo updating to "$VERSION"
-  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
-  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
- fi
+if [ -e "$progHome/version" ] && [ -e "$APPDIR/winedata/yr/version" ]; then
+  # $APPDIR and $progHome were unquoted in these `cat` calls,
+  # which would break on paths containing spaces.
+  VERSION="$(cat "$APPDIR/winedata/yr/version" | grep Version= | cut -d'=' -f2)"
+  last="$(cat "$progHome/version" | grep Version= | cut -d'=' -f2)"
+  if [ "$last" != "$VERSION" ]; then
+    echo "updating to $VERSION"
+    sync_game_files
+  fi
 fi
 
+# ---------------------------------------------------------------------------
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
+# ---------------------------------------------------------------------------
 case "$1" in
   "install")
     dkico
     ;;
   "winetricks")
-    winetricks "$2" "$3"
+    # Previously only forwarded "$2" "$3", silently dropping any
+    # winetricks verbs beyond the second. Shift off "winetricks" and pass
+    # everything else through.
+    shift
+    winetricks "$@"
+    ;;
+  "Syringe.exe")
+    # (corrected): Syringe.exe's calling convention is
+    #   Syringe.exe -i=<dll> [-i=<dll> ...] <target.exe> --args="<target args>"
+    # i.e. everything meant for gamemd-spawn.exe must be a single
+    # --args="..." string, not bare trailing tokens appended after the
+    # target executable. The original script appended
+    # -SPAWN -LOG -CD -RA2ModeSaveID=... as separate Syringe.exe arguments
+    # (and a stray "\ " before "gamemd-spawn.exe" mangled that token too),
+    # so Syringe never actually forwarded -SPAWN/-LOG/-CD/etc. to the
+    # game. Also restored -Include -Inheritance, which the original line
+    # was missing entirely. Matches the reference spawner config:
+    #   ExtraCommandLineParams=-i=Ares.dll -i=CnCNet-Spawner.dll
+    #   -i=Phobos.dll gamemd-spawn.exe --args="-SPAWN -LOG -CD -Include
+    #   -Inheritance -RA2ModeSaveID=0x8d113b94"
+    "$WINELOADER" "$1" -i=Ares.dll -i=CnCNet-Spawner.dll -i=Phobos.dll gamemd-spawn.exe --args="-SPAWN -LOG -CD -Include -Inheritance -RA2ModeSaveID=0x8d113b94"
+    ;;
+  "clientogl.dll")
+    # This branch omitted "$progBin" (the actual path to
+    # clientogl.dll), unlike the default case below which does include
+    # it. Combined with the argument-dropping bug above (since the bare
+    # token "clientogl.dll" matched neither the file-exists nor the
+    # leading-dash branch), dotnet was being launched with no DLL to run
+    # at all. Pass $progBin explicitly, same as the default case.
+    "$APPDIR"/usr/bin/dotnet "$progBin" "${args[@]}"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     "$WINELOADER" "$1"
@@ -151,7 +224,7 @@ case "$1" in
   "eglinfo"|"es2_info"|"es2gears_wayland"|"es2gears_x11"|"es2tri"|"glxinfo"|"glxheads"|"glxgears"|"glxdemo"|"vulkaninfo")
     "$WINELOADER" "$@"
     ;;
-   "vkcube"|"vkcubepp"|"vkcube-wayland")
+  "vkcube"|"vkcubepp"|"vkcube-wayland")
     export VK_INSTANCE_LAYERS="VK_LAYER_MESA_overlay"
     "$WINELOADER" "$@"
     ;;
