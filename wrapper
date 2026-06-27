@@ -77,6 +77,13 @@ if [[ ! -f $progHome/ra2.mix ]] || [[ ! -f $progHome/ra2md.mix ]] || [[ ! -f $pr
   exit 1
 fi
 
+wine_game="$progHome/Resources/Compatibility/Unix/wine-game.sh"
+
+if [[ -f "$wine_game" ]] && [[ $(grep -c APPIMAGE "$wine_game") -eq 0 ]]; then
+  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
+  chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
+fi
+
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
   sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
