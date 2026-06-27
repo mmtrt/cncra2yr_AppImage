@@ -79,6 +79,7 @@ fi
 
 if [[ ! -f $progHome/YRLauncherUnix.sh ]] && [[ -d $APPDIR/winedata/.wine ]]; then
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
   chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
@@ -95,6 +96,7 @@ elif [ ! -d "$WINEPREFIX" ]; then
   "$WINELOADER" wineboot
   "$WINELOADER" reg add "HKCU\\Software\\Wine\\AppDefaults\\gamemd-spawn.exe\\DllOverrides" /t REG_SZ /v ddraw /d native,builtin ; sleep 5
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
   chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
 fi
 
@@ -122,6 +124,7 @@ last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
  if [ "$last" != "$VERSION" ]; then
   echo updating to "$VERSION"
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  sed -i 's| bin|/bin|;s|{|APPIMAGE ${|' "$progHome"/Resources/Compatibility/Unix/*.sh
   chmod +x "$progHome"/Resources/Compatibility/Unix/*.sh
  fi
 fi
