@@ -113,14 +113,21 @@ elif [ ! -d "$WINEPREFIX" ]; then
 fi
 
 atexit() {
-  while pgrep -f "clientogl" >/dev/null; do sleep 1; done
-  # `ps -ef | grep $progName.unionfs | ... | head -1` can match
-  # the grep invocation itself (its command line literally contains the
-  # search string), risking killing grep instead of unionfs-fuse.
-  # pkill -f doesn't match its own process.
-  pkill -f "${progName}.unionfs"
-  sleep 1
-  rm -r "$MNT_WINEPREFIX"
+  # Force-stop any Wine processes still running under this prefix (e.g.
+  # gamemd-spawn.exe, launched via Syringe.exe in a separate AppRun
+  # invocation triggered by the client) so the mount tears down
+  # immediately when the client closes, rather than racing it.
+  WINEPREFIX="$MNT_WINEPREFIX" "$WINESERVER" -k 2>/dev/null
+  WINEPREFIX="$MNT_WINEPREFIX" "$WINESERVER" -w 2>/dev/null
+
+  # Unmount properly via fusermount instead of pkill-ing unionfs-fuse by
+  # name (which also no longer matches now that MNT_WINEPREFIX includes
+  # the UID suffix) and hoping a fixed `sleep 1` is enough. -z (lazy)
+  # detaches the mountpoint immediately; unionfs-fuse exits on its own
+  # once its FUSE channel closes.
+  fusermount -uz "$MNT_WINEPREFIX" 2>/dev/null || fusermount3 -uz "$MNT_WINEPREFIX" 2>/dev/null
+
+  rm -r "$MNT_WINEPREFIX" 2>/dev/null
 }
 
 # ---------------------------------------------------------------------------
